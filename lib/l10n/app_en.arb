@@ -1,0 +1,34 @@
+{
+"hello": "hello",
+"name": "name",
+"dark" : "dark",
+"light" : "light",
+"continue_c" : "continue",
+"center": "center",
+"patients_record" : "patients record",
+"payments": "payments",
+"setting": "settings",
+"notifications" : "notifications",
+"search" : "search",
+"add_new_patient" : "add new patient",
+"first_name" : "first name",
+"last_name" : "last name",
+"age": "age",
+"phone": "phone number",
+"medical_history": "medical history",
+"surgery_history": "surgeries history",
+"notes": "notes",
+"add": "add",
+"cancel": "cancel",
+"title_required": "fields marked with '*' cannot be empty",
+"failed": "the process could not be completed",
+"success": "patient was added successfully",
+"info": "patient's info",
+"treatments": "treatments",
+"implants": "implants",
+"payments": "payments",
+"reminders": "reminders"
+
+
+
+}
