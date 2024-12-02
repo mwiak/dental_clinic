@@ -19,6 +19,7 @@ class SqlDb {
 
     Database mydb = await openDatabase(path,
         onCreate: _onCreate, version: 1, onUpgrade: _onUpgrade);
+    await mydb.execute('PRAGMA foreign_keys = ON');
     return mydb;
   }
 
@@ -51,13 +52,15 @@ class SqlDb {
   }
 
   _onCreate(Database db, int version) async {
+    await db.execute('PRAGMA foreign_keys = ON');
     await db.execute('''
   CREATE TABLE user (
     id INTEGER PRIMARY KEY  , 
     name TEXT ,
     center TEXT,
     language TEXT,
-    is_dark_mode BOOLEAN
+    is_dark_mode BOOLEAN,
+    display_mode TEXT
     
      )
    ''');
@@ -76,8 +79,8 @@ class SqlDb {
     lastname TEXT,
     age TEXT,
     phone_number TEXT,
-    pre_ill TEXT,
-    pre_surg TEXT,
+    medical TEXT,
+    surgery TEXT,
     notes TEXT,
     date TEXT
      
@@ -90,21 +93,23 @@ class SqlDb {
     patient_id INTEGER,
     tooth_code INTEGER,
     treatment TEXT,
-    sub_treatment TEXT,
+    details TEXT,
     date TEXT,
     cost REAL,
     notes TEXT
+    
      )
    ''');
 
     await db.execute('''
-  CREATE TABLE gum_treatments (
+  CREATE TABLE general_treatments (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    treatment TEXT,
+    treatment_type TEXT,
     date TEXT,
     cost REAL,
     notes TEXT
+    
      )
    ''');
 
@@ -115,8 +120,11 @@ class SqlDb {
     tooth_code INTEGER,
     type TEXT,
     details TEXT,
+    dates TEXT,
+    date TEXT,
     cost REAL,
     notes TEXT
+    
      )
    ''');
 
@@ -126,7 +134,9 @@ class SqlDb {
     patient_id INTEGER,
     title TEXT,
     amount REAL,
-    date TEXT   
+    date TEXT,
+    notes TEXT
+      
      )
    ''');
 
@@ -137,7 +147,8 @@ class SqlDb {
     name TEXT,
     title TEXT,
     end_date TEXT,
-    isChecked TEXT   
+    status TEXT,
+    FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
      )
    ''');
     await db.execute('''
@@ -160,28 +171,99 @@ class SqlDb {
    ''');
 
     await db.execute('''
-  CREATE TABLE treatments_repo (
-    id INTEGER PRIMARY KEY, 
-    type TEXT,
-    sub_types TEXT
-     )
-   ''');
-
-    await db.execute('''
-  CREATE TABLE gum_treatments_repo (
+  CREATE TABLE general_treatments_types (
     id INTEGER PRIMARY KEY, 
     type TEXT
+    
      )
    ''');
 
     await db.execute('''
-  CREATE TABLE implants_repo (
-    id INTEGER PRIMARY KEY, 
-    type TEXT,
-    sub_types TEXT
-     )
-   ''');
+      CREATE TABLE treatment_types (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+      )
+    ''');
 
+    await db.execute('''
+      CREATE TABLE custom_fields (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        treatment_type_id INTEGER,
+        field_name TEXT NOT NULL,
+        field_type TEXT NOT NULL, -- e.g., 'text', 'dropdown', 'date'
+        field_order INTEGER,
+        FOREIGN KEY (treatment_type_id) REFERENCES treatment_types (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE field_options (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        custom_field_id INTEGER,
+        option_value TEXT NOT NULL,
+        FOREIGN KEY (custom_field_id) REFERENCES custom_fields (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE implants_types (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE custom_fields_implants (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        implant_type_id INTEGER,
+        field_name TEXT NOT NULL,
+        field_type TEXT NOT NULL, -- e.g., 'text', 'dropdown', 'date'
+        field_order INTEGER,
+        FOREIGN KEY (implant_type_id) REFERENCES implants_types (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE field_options_implants (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        custom_field_id INTEGER,
+        option_value TEXT NOT NULL,
+        FOREIGN KEY (custom_field_id) REFERENCES custom_fields_implants (id) ON DELETE CASCADE
+      )
+    ''');
+
+    await db.insert('treatment_types', {'name': 'Filling'});
+    await db.insert(
+      'custom_fields',
+      {
+        'field_name': 'Filling Material',
+        'field_type': 'dropdown',
+        'treatment_type_id': '1',
+      },
+    );
+    await db.insert(
+      'field_options',
+      {
+        'option_value': 'Metal',
+        'custom_field_id': '1',
+      },
+    );
+
+    await db.insert(
+      'field_options',
+      {
+        'option_value': 'Zircon',
+        'custom_field_id': '1',
+      },
+    );
+
+    await db.insert(
+      'field_options',
+      {
+        'option_value': 'Khazaf',
+        'custom_field_id': '1',
+      },
+    );
     print(" onCreate =====================================");
   }
 
@@ -207,6 +289,13 @@ class SqlDb {
     Database? mydb = await db;
     int response = await mydb!.rawDelete(sql);
     return response;
+  }
+
+  add10KEntry() async {
+    for (int x = 1; x < 5000; x++) {
+      await insertData(
+          ''' INSERT INTO patients (firstname,lastname,age,phone_number,date) VALUES ('ahmed','mohammed','25','2546898','20/02/2020')''');
+    }
   }
 
 // SELECT

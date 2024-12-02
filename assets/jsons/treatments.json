@@ -1,0 +1,31 @@
+[
+
+  {
+    "type": "حشوة محافظة",
+    "details": [{
+      "field_label": "نوع الحشوة",
+      "field_type": "dropdown",
+      "values": ["معدني","تجميلي"]
+    }]
+  },
+
+  {
+    "type": "معالجة لبية",
+    "details": [{
+      "field_label": "طول السن",
+      "field_type": "text"
+
+    }]
+  },
+
+
+
+  {
+    "type": "تتويج",
+    "details": [{
+      "field_label": "مادة التتويج",
+      "field_type": "dropdown",
+      "values": ["معدن","زيركون","خزف"]
+    }]
+  }
+]

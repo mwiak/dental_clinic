@@ -6,7 +6,7 @@ class UserModel {
   Future<void> createNewUser(
       String name, String center, String language, bool isDark) async {
     await dataHelper.insertData(
-        '''INSERT INTO user (name,center,language,is_dark_mode) VALUES ('$name', '$center', '$language',$isDark)''');
+        '''INSERT INTO user (name,center,language,is_dark_mode,display_mode) VALUES ('$name', '$center', '$language',$isDark,'compact')''');
   }
 
   Future<List> getUserData() async {
@@ -24,5 +24,10 @@ class UserModel {
   Future<void> modifyLanguage(String value) async {
     await dataHelper
         .insertData('''UPDATE user SET language='$value' WHERE id = 1 ''');
+  }
+
+  Future<void> modifyDisplayMode(String value) async {
+    await dataHelper
+        .insertData('''UPDATE user SET display_mode='$value' WHERE id = 1 ''');
   }
 }

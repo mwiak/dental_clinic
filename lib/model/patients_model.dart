@@ -11,7 +11,26 @@ class PatientsModel {
   }
 
   Future<List> getAllPatients() async {
-    List data = await dataHelper.readData('''SELECT * FROM patients''');
+    List data = await dataHelper
+        .readData('''SELECT * FROM patients ORDER BY id DESC ''');
+    return data;
+  }
+
+  Future<List> getAllPatientsLimited() async {
+    List data = await dataHelper
+        .readData('''SELECT * FROM patients ORDER BY id DESC LIMIT 500 ''');
+    return data;
+  }
+
+  Future<List> getAllPatientsSearched(String input) async {
+    List data = await dataHelper.readData(
+        '''SELECT * FROM patients  WHERE firstname || ' ' || lastname LIKE '%$input%' LIMIT 50 ''');
+    return data;
+  }
+
+  Future<List> getAllPatientsSearchedPhone(String input) async {
+    List data = await dataHelper.readData(
+        '''SELECT * FROM patients  WHERE phone_number LIKE '%$input%' LIMIT 50 ''');
     return data;
   }
 }

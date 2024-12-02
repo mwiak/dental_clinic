@@ -1,7 +1,10 @@
+import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/service_locater/get_it.dart';
 import 'package:dental_clinic/view/Register.dart';
 import 'package:dental_clinic/view/initializer.dart';
+import 'package:dental_clinic/view_model/custome_field_provider.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
+import 'package:dental_clinic/view_model/reminders_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dental_clinic/view_model/user_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,9 +17,13 @@ void main() async {
   setup();
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
+  SqlDb dataHelper = SqlDb();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => PatientsProvider()),
+    ChangeNotifierProvider(create: (_) => CustomFieldProvider()),
+    ChangeNotifierProvider(create: (_) => RemindersProvider()),
   ], child: const MyApp()));
 }
 

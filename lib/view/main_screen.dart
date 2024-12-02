@@ -1,4 +1,6 @@
 import 'package:dental_clinic/view/main_menu_screens/patients_record.dart';
+import 'package:dental_clinic/view/main_menu_screens/payments.dart';
+import 'package:dental_clinic/view/main_menu_screens/reminders.dart';
 import 'package:dental_clinic/view/main_menu_screens/settings.dart';
 import 'package:dental_clinic/view/second.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -21,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return NavigationView(
       pane: NavigationPane(
+          size: NavigationPaneSize(openWidth: 150),
           displayMode: displayMode,
           selected: topIndex,
           onChanged: (int i) => setState(() => topIndex = i),
@@ -44,33 +47,13 @@ class _MainScreenState extends State<MainScreen> {
             PaneItem(
               icon: const Icon(FluentIcons.circle_dollar),
               title: Text(AppLocalizations.of(context)!.payments),
-              body: NavigationView(
-                content: Center(
-                  child: Column(
-                    children: [
-                      Button(
-                        child: Text('agfdsdfsdfsdf'),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              body: Payments(),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.ringer),
               title: Text(AppLocalizations.of(context)!.notifications),
               body: NavigationView(
-                content: Center(
-                  child: Column(
-                    children: [
-                      Button(
-                        child: Text('agfdsdfsdfsdf'),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                ),
+                content: Reminders(),
               ),
             ),
             PaneItem(

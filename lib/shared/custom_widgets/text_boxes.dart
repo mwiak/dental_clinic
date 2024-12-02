@@ -6,11 +6,13 @@ class InputText extends StatefulWidget {
   final TextEditingController controller;
   final String label;
   final String? placeholder;
+  final String? requiredSymbol;
   const InputText(
       {super.key,
       required this.controller,
       required this.label,
-      this.placeholder});
+      this.placeholder,
+      this.requiredSymbol});
 
   @override
   State<InputText> createState() => _InputTextState();
@@ -20,7 +22,7 @@ class _InputTextState extends State<InputText> {
   @override
   Widget build(BuildContext context) {
     return InfoLabel(
-      label: widget.label + '*',
+      label: widget.label + (widget.requiredSymbol ?? ''),
       child: TextBox(
         focusNode: FocusNode(),
         controller: widget.controller,
@@ -31,6 +33,13 @@ class _InputTextState extends State<InputText> {
         expands: false,
         decoration: BoxDecoration(
           color: FluentTheme.of(context).cardColor,
+          border: Border.all(
+            color:
+                FluentTheme.of(context).inactiveColor, // Unfocused border color
+            width: 1.0, // Set border width for unfocused state
+          ),
+          borderRadius:
+              BorderRadius.circular(4.0), // Optional: Customize corner radius
         ),
       ),
     );
@@ -42,12 +51,14 @@ class InfoEntrySmall extends StatefulWidget {
   final String label;
   final String? placeholder;
   final bool readOnly;
+  final String? requiredSymbol;
   const InfoEntrySmall(
       {super.key,
       required this.controller,
       required this.label,
       this.placeholder,
-      required this.readOnly});
+      required this.readOnly,
+      this.requiredSymbol});
 
   @override
   State<InfoEntrySmall> createState() => _InfoEntrySmallState();
@@ -57,7 +68,7 @@ class _InfoEntrySmallState extends State<InfoEntrySmall> {
   @override
   Widget build(BuildContext context) {
     return InfoLabel(
-      label: widget.label,
+      label: widget.label + (widget.requiredSymbol ?? ''),
       child: TextBox(
         enabled: widget.readOnly,
         // readOnly: widget.readOnly,
@@ -70,6 +81,13 @@ class _InfoEntrySmallState extends State<InfoEntrySmall> {
         expands: false,
         decoration: BoxDecoration(
           color: FluentTheme.of(context).cardColor,
+          border: Border.all(
+            color:
+                FluentTheme.of(context).inactiveColor, // Unfocused border color
+            width: 1.0, // Set border width for unfocused state
+          ),
+          borderRadius:
+              BorderRadius.circular(4.0), // Optional: Customize corner radius
         ),
       ),
     );
@@ -106,7 +124,7 @@ class _InfoEntryLargeState extends State<InfoEntryLarge> {
         controller: widget.controller,
         placeholder: widget.placeholder,
         style: TextStyle(
-          fontSize: fontSizeForTextBox, // Font size of the TextBox text
+          fontSize: fontSizeForLargeTextBox, // Font size of the TextBox text
         ),
         expands: false,
         decoration: BoxDecoration(

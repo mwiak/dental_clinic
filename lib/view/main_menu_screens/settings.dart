@@ -1,4 +1,7 @@
 import 'package:dental_clinic/shared/theme.dart';
+import 'package:dental_clinic/view/main_menu_screens/general_treatments_customization.dart';
+import 'package:dental_clinic/view/main_menu_screens/implants_customization.dart';
+import 'package:dental_clinic/view/main_menu_screens/treatments_customization.dart';
 import 'package:dental_clinic/view_model/user_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +51,29 @@ class _SettingsState extends State<Settings> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              children: [
+                FilledButton(
+                    child: const Text('customize treatments types'),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(FluentPageRoute(
+                          builder: (context) => TreatmentsCustomization()));
+                    }),
+                FilledButton(
+                    child: const Text('customize implants types'),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(FluentPageRoute(
+                          builder: (context) => ImplantsCustomization()));
+                    }),
+                FilledButton(
+                    child: const Text('customize general treatments types'),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(FluentPageRoute(
+                          builder: (context) =>
+                              GeneralTreatmentsCustomization()));
+                    })
+              ],
+            ),
             Row(
               children: [
                 ComboBox<String>(

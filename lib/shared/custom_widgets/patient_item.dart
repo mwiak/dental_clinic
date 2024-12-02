@@ -35,8 +35,58 @@ class _PatientItemState extends State<PatientItem> {
             Navigator.of(context).pushReplacement(FluentPageRoute(
                 builder: (context) => PatientScreen(
                       id: widget.patientData['id'],
+                      patientName: widget.patientData['firstname'] +
+                          ' ' +
+                          widget.patientData['lastname'],
                     )));
           }),
+    );
+  }
+}
+
+class PatientDetailedItem extends StatefulWidget {
+  final Map patientData;
+  const PatientDetailedItem({super.key, required this.patientData});
+
+  @override
+  State<PatientDetailedItem> createState() => _PatientDetailedItemState();
+}
+
+class _PatientDetailedItemState extends State<PatientDetailedItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 1, 8, 12),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Button(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith((states) {
+                if (states.isHovered) {
+                  return FluentTheme.of(context).selectionColor;
+                }
+                return FluentTheme.of(context).cardColor; // Default color
+              }),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child: Text(widget.patientData['firstname'])),
+                Expanded(child: Text(widget.patientData['lastname'])),
+                Expanded(child: Text(widget.patientData['age'] + '  ' + 'سنة')),
+                Expanded(child: Text(widget.patientData['phone_number'])),
+              ],
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(FluentPageRoute(
+                  builder: (context) => PatientScreen(
+                        id: widget.patientData['id'],
+                        patientName: widget.patientData['firstname'] +
+                            ' ' +
+                            widget.patientData['lastname'],
+                      )));
+            }),
+      ),
     );
   }
 }

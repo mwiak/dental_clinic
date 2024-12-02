@@ -15,4 +15,19 @@ class PatientsProvider extends ChangeNotifier {
     List data = await patientsModel.getAllPatients();
     return data;
   }
+
+  Future<List> getAllPatientsLimited() async {
+    List data = await patientsModel.getAllPatientsLimited();
+    return data;
+  }
+
+  Future<List> getAllPatientsSearched(String input) async {
+    List data = await patientsModel.getAllPatientsSearched(input);
+    return data;
+  }
+
+  Future<List> getAllPatientsSearchedPhone(String input) async {
+    List data = await patientsModel.getAllPatientsSearchedPhone(input);
+    return data;
+  }
 }

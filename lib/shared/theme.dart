@@ -36,3 +36,4 @@ FluentThemeData darkMode = FluentThemeData(
 
 //constants
 double fontSizeForTextBox = 20;
+double fontSizeForLargeTextBox = 14;

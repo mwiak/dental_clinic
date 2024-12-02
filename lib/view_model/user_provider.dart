@@ -7,6 +7,7 @@ class UserProvider extends ChangeNotifier {
 
   String name = '';
   String center = '';
+  String displayMode = '';
 
   FluentThemeData themeMode = lightMode;
   Locale language = Locale('en');
@@ -18,6 +19,7 @@ class UserProvider extends ChangeNotifier {
     center = data[0]['center'];
     language = data[0]['language'] == 'English' ? Locale('en') : Locale('ar');
     themeMode = data[0]['is_dark_mode'] == 1 ? darkMode : lightMode;
+    displayMode = data[0]['display_mode'];
     notifyListeners();
   }
 
@@ -66,6 +68,18 @@ class UserProvider extends ChangeNotifier {
     } else if (val == 'Arabic') {
       language = const Locale('ar');
       await userModel.modifyLanguage(val);
+      notifyListeners();
+    } else {}
+  }
+
+  Future<void> modifyDisplayMode(String val) async {
+    if (val == 'compact') {
+      displayMode = 'compact';
+      await userModel.modifyDisplayMode(val);
+      notifyListeners();
+    } else if (val == 'detailed') {
+      displayMode = 'detailed';
+      await userModel.modifyDisplayMode(val);
       notifyListeners();
     } else {}
   }
