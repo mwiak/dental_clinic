@@ -15,4 +15,5 @@ dental_clinic/
 │   │   ├── patient_screen/  
 │   │   └── payments/  
 │   └── ...  
-   
+     
+# for building the app for windows the file sqflite3.dll must be copied to same deirectory containing .exe file
