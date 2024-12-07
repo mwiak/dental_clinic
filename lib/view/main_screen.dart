@@ -2,10 +2,11 @@ import 'package:dental_clinic/view/main_menu_screens/patients_record.dart';
 import 'package:dental_clinic/view/main_menu_screens/payments.dart';
 import 'package:dental_clinic/view/main_menu_screens/reminders.dart';
 import 'package:dental_clinic/view/main_menu_screens/settings.dart';
-import 'package:dental_clinic/view/second.dart';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//main screen is a wrapper widget with 4 routes: patients record, payments, reminders, and settings
 class MainScreen extends StatefulWidget {
   const MainScreen({
     super.key,

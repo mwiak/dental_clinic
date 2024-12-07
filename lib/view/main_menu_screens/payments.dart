@@ -37,14 +37,14 @@ class _PaymentsState extends State<Payments> {
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.reports),
+              title: Text(AppLocalizations.of(context)!.monthly_summary),
               body: Center(
                 child: MonthlyReport(),
               ),
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.reports),
+              title: Text(AppLocalizations.of(context)!.year_reports),
               body: Center(
                 child: YearlyReport(),
               ),

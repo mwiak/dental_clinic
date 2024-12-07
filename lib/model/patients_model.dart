@@ -1,5 +1,6 @@
 import 'package:dental_clinic/database/sqflite.dart';
 
+//adds new patient and retrieves patients from the database
 class PatientsModel {
   SqlDb dataHelper = SqlDb();
 

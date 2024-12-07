@@ -1,5 +1,6 @@
 import 'package:dental_clinic/database/sqflite.dart';
 
+//modifying or deleting existing patient
 class PatientMenuModel {
   SqlDb dataHelper = SqlDb();
 

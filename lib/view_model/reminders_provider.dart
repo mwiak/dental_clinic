@@ -4,7 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../database/sqflite.dart';
-import '../model/reminder_entity.dart';
+import '../model/entities/reminder_entity.dart';
 import '../shared/public_methods/datetime_methods.dart';
 
 class RemindersProvider extends ChangeNotifier {

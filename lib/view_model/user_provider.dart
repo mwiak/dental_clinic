@@ -1,4 +1,4 @@
-import 'package:dental_clinic/model/UserModel.dart';
+import 'package:dental_clinic/model/user_model.dart';
 import 'package:dental_clinic/shared/theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 

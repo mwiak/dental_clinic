@@ -1,5 +1,5 @@
 import 'package:dental_clinic/database/sqflite.dart';
-import 'package:dental_clinic/model/cost_entity.dart';
+import 'package:dental_clinic/model/entities/cost_entity.dart';
 import 'package:dental_clinic/shared/custom_widgets/barboxes.dart';
 import 'package:dental_clinic/shared/custom_widgets/cost_box.dart';
 import 'package:dental_clinic/shared/custom_widgets/date_pickers.dart';

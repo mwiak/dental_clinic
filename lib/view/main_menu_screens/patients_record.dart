@@ -7,12 +7,13 @@ import 'package:dental_clinic/view_model/user_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import '../../model/reminder_entity.dart';
+import '../../model/entities/reminder_entity.dart';
 import '../../shared/custom_widgets/barboxes.dart';
 import 'package:intl/intl.dart';
 
 import '../../shared/public_methods/datetime_methods.dart';
 
+//screen for showing all the patients
 class PatientsRecord extends StatefulWidget {
   const PatientsRecord({super.key});
 

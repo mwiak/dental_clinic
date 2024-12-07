@@ -3,8 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../../../database/sqflite.dart';
-import '../../../model/monatery_entity.dart';
+import '../../../model/entities/monatery_entity.dart';
 import '../../../shared/custom_widgets/headers.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class YearlyReport extends StatefulWidget {
   const YearlyReport({super.key});
@@ -34,8 +35,27 @@ class _YearlyReportState extends State<YearlyReport> {
     'كانون الأول',
   ];
 
+  List<String> monthsEn = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
   String parseGivenMonth(int input) {
-    return monthsAr[input - 1] + '  ' + input.toString();
+    if (AppLocalizations.of(context)!.localeName == 'ar') {
+      return monthsAr[input - 1] + '  ' + input.toString();
+    } else {
+      return monthsEn[input - 1] + '  ' + input.toString();
+    }
   }
 
   DateTime stringToDate(String x) {
@@ -147,7 +167,7 @@ class _YearlyReportState extends State<YearlyReport> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return const ContentDialog(
+          return ContentDialog(
             content: SizedBox(
               width: 250,
               height: 250,
@@ -158,7 +178,7 @@ class _YearlyReportState extends State<YearlyReport> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('جاري إعداد التقرير')
+                  Text(AppLocalizations.of(context)!.report_being_prepared)
                 ],
               ),
             ),
@@ -179,7 +199,7 @@ class _YearlyReportState extends State<YearlyReport> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('إغلاق'))
+                    child: Text(AppLocalizations.of(context)!.close))
               ],
             ));
   }
@@ -194,7 +214,8 @@ class _YearlyReportState extends State<YearlyReport> {
           SizedBox(
               width: 300,
               child: TextBox(
-                placeholder: 'enter a year, for example 2024',
+                placeholder:
+                    AppLocalizations.of(context)!.year_report_placeholder,
                 controller: yearC,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
@@ -207,7 +228,7 @@ class _YearlyReportState extends State<YearlyReport> {
               onPressed: () {
                 parseYearInput();
               },
-              child: const Text('بدء إعداد التقرير')),
+              child: Text(AppLocalizations.of(context)!.start_report)),
           const SizedBox(
             height: 20,
           ),
@@ -225,7 +246,7 @@ class _YearlyReportState extends State<YearlyReport> {
                           ),
                           Text(' '),
                           Text(
-                            'تقرير الأرباح لسنة',
+                            AppLocalizations.of(context)!.financial_report,
                             style: TextStyle(fontSize: 20),
                           ),
                         ],
@@ -242,10 +263,11 @@ class _YearlyReportState extends State<YearlyReport> {
                         ),
                       ),
                       RemindersHeader(
-                          title1: 'الشهر',
-                          title2: 'مجموع المصاريف',
-                          title3: 'مجموع الدفعات',
-                          title4: 'الربح'),
+                          title1: AppLocalizations.of(context)!.month,
+                          title2: AppLocalizations.of(context)!.total_expenses,
+                          title3: AppLocalizations.of(context)!
+                              .total_incoming_payments,
+                          title4: AppLocalizations.of(context)!.profit),
                       SizedBox(
                         height: 300,
                         width: 500,

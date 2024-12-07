@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../shared/custom_widgets/implant_type_custom.dart';
 import '../../shared/custom_widgets/text_boxes.dart';
 
+//screen for customizing implants types
 class ImplantsCustomization extends StatefulWidget {
   const ImplantsCustomization({super.key});
 

@@ -1,5 +1,5 @@
 import 'package:dental_clinic/database/sqflite.dart';
-import 'package:dental_clinic/model/reminder_entity.dart';
+import 'package:dental_clinic/model/entities/reminder_entity.dart';
 import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patient_screen.dart';
 import 'package:dental_clinic/view_model/reminders_provider.dart';

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
+//class for database calls
 class SqlDb {
   static Database? _db;
 

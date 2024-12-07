@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
+//file for defining dark and light themes values
 FluentThemeData lightMode = FluentThemeData(
   brightness: Brightness.light,
   accentColor: Colors.purple,

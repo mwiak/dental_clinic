@@ -128,7 +128,21 @@
 "options":"options",
 "add_general_treatment_type": "add new general treatment type",
 "implant_type_fields":"implant type fields",
-"go_to_patient_page":"go to patient page"
+"go_to_patient_page":"go to patient page",
+"monthly_summary":"monthly summary",
+"year_reports":"year reports",
+"start_report":"request report",
+"year_report_placeholder":"enter a year, for example 2024",
+"financial_report":"financial_report",
+"month":"month",
+"total_expenses":"total_expenses",
+"report_being_prepared":"report being prepared",
+"current_month":"current month",
+"past_months":"past months",
+"refresh":"refresh page",
+"month_expenses":"month expenses",
+"month_payments":"month payments",
+"month_profit":"month profit"
 
 
 

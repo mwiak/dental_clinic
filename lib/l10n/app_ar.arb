@@ -128,5 +128,19 @@
 "options":"الاختيارات:",
 "add_general_treatment_type": "إضافة نوع علاج عام جديد",
 "implant_type_fields":"حقول نوع الزرعة",
-"go_to_patient_page":"الذهاب إلى صفحة المريض"
+"go_to_patient_page":"الذهاب إلى صفحة المريض",
+"monthly_summary":"الملخص الشهري",
+"year_reports":"التقارير السنوية",
+"start_report":"بدء إعداد التقرير",
+"year_report_placeholder":"ادخل سنة, مثال: 2024",
+"financial_report":"تقرير الأرباح",
+"month":"الشهر",
+"total_expenses":"إجمالي المصاريف",
+"report_being_prepared":"جاري إعداد التقرير",
+"current_month":"الشهر الحالي",
+"past_months":"الأشهر الماضية",
+"refresh":"تحديث الصفحة",
+"month_expenses":"مصاريف الشهر",
+"month_payments":"دفعات الشهر",
+"month_profit":"ربح الشهر"
 }

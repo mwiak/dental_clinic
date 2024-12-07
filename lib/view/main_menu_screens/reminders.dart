@@ -1,5 +1,5 @@
 import 'package:dental_clinic/database/sqflite.dart';
-import 'package:dental_clinic/model/reminder_entity.dart';
+import 'package:dental_clinic/model/entities/reminder_entity.dart';
 import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:dental_clinic/view_model/reminders_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../shared/custom_widgets/headers.dart';
 import '../../shared/custom_widgets/reminder_entry.dart';
 
+//screen for displaying reminders when specified time is due
 class Reminders extends StatefulWidget {
   const Reminders({super.key});
 

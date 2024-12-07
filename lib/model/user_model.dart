@@ -1,5 +1,6 @@
 import 'package:dental_clinic/database/sqflite.dart';
 
+//class for setting and retrieving user's preferences
 class UserModel {
   SqlDb dataHelper = SqlDb();
 

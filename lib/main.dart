@@ -13,13 +13,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+//start point of the application
 void main() async {
   setup();
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
   SqlDb dataHelper = SqlDb();
 
-  runApp(MultiProvider(providers: [
+  runApp(//defining multi providers and set them as the root
+      MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
     ChangeNotifierProvider(create: (_) => PatientsProvider()),
     ChangeNotifierProvider(create: (_) => CustomFieldProvider()),
@@ -35,7 +37,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+  //  this widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return FluentApp(

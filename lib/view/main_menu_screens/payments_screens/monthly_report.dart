@@ -2,9 +2,9 @@ import 'package:dental_clinic/shared/custom_widgets/headers.dart';
 import 'package:dental_clinic/shared/custom_widgets/profit_summary.dart';
 import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:intl/intl.dart';
 import '../../../database/sqflite.dart';
-import '../../../model/monatery_entity.dart';
+import '../../../model/entities/monatery_entity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MonthlyReport extends StatefulWidget {
   const MonthlyReport({super.key});
@@ -41,13 +41,36 @@ class _MonthlyReportState extends State<MonthlyReport> {
     'كانون الأول',
   ];
 
+  List<String> monthsEn = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
   String parseCurrentMonth() {
     int monthNumber = DateTime.now().month;
-    return monthsAr[monthNumber - 1] + '  ' + monthNumber.toString();
+    if (AppLocalizations.of(context)!.localeName == 'ar') {
+      return monthsAr[monthNumber - 1] + '  ' + monthNumber.toString();
+    } else {
+      return monthsEn[monthNumber - 1] + '  ' + monthNumber.toString();
+    }
   }
 
   String parseGivenMonth(int input) {
-    return monthsAr[input - 1] + '  ' + input.toString();
+    if (AppLocalizations.of(context)!.localeName == 'ar') {
+      return monthsAr[input - 1] + '  ' + input.toString();
+    } else {
+      return monthsEn[input - 1] + '  ' + input.toString();
+    }
   }
 
   Future<List> getExpenses() async {
@@ -185,7 +208,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
           child: Column(
             children: [
               Text.rich(TextSpan(
-                  text: 'الشهر الحالي',
+                  text: AppLocalizations.of(context)!.current_month,
                   style: TextStyle(fontSize: 20),
                   children: [
                     TextSpan(text: ": "),
@@ -208,7 +231,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Button(
-                      child: Text('تحديث الصفحة'),
+                      child: Text(AppLocalizations.of(context)!.refresh),
                       onPressed: () {
                         processAll();
                       },
@@ -216,18 +239,18 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   ),
                 ],
               ),
-              const Text(
-                'الأشهر الماضية',
+              Text(
+                AppLocalizations.of(context)!.past_months,
                 style: TextStyle(fontSize: 20),
               ),
               const Divider(),
-              const SizedBox(
+              SizedBox(
                 width: 500,
                 child: RemindersHeader(
-                    title1: 'الشهر',
-                    title2: 'مصاريف الشهر',
-                    title3: 'دفعات الشهر',
-                    title4: 'الربح'),
+                    title1: AppLocalizations.of(context)!.month,
+                    title2: AppLocalizations.of(context)!.month_expenses,
+                    title3: AppLocalizations.of(context)!.month_payments,
+                    title4: AppLocalizations.of(context)!.month_profit),
               ),
               const Divider(),
               isLoading

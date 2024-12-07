@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../shared/custom_widgets/text_boxes.dart';
 
+//screen for customizing treatments types
 class TreatmentsCustomization extends StatefulWidget {
   const TreatmentsCustomization({super.key});
 
