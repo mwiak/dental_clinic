@@ -142,7 +142,13 @@
 "refresh":"refresh page",
 "month_expenses":"month expenses",
 "month_payments":"month payments",
-"month_profit":"month profit"
+"month_profit":"month profit",
+"type_customization":"types customization",
+"incomplete_message":"patients with remaining unpaid invoices will be displayed",
+"incomplete_payments_nodata":"All invoices have been paid",
+"expense_description":"expense description",
+"date":"date",
+"preferences":"preferences"
 
 
 

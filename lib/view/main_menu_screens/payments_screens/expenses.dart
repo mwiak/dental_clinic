@@ -220,7 +220,9 @@ class _ExpensesState extends State<Expenses> {
               SizedBox(
                 width: 500,
                 child: BasicHeader(
-                    title1: 'المصروف', title2: 'المبلغ', title3: 'التاريخ'),
+                    title1: AppLocalizations.of(context)!.expense_description,
+                    title2: AppLocalizations.of(context)!.amount,
+                    title3: AppLocalizations.of(context)!.date),
               ),
               IconButton(
                   onPressed: () {
@@ -241,7 +243,8 @@ class _ExpensesState extends State<Expenses> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('لا يوجد دفعات'));
+                    return Center(
+                        child: Text(AppLocalizations.of(context)!.no_data));
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,

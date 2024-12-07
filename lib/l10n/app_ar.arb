@@ -142,5 +142,11 @@
 "refresh":"تحديث الصفحة",
 "month_expenses":"مصاريف الشهر",
 "month_payments":"دفعات الشهر",
-"month_profit":"ربح الشهر"
+"month_profit":"ربح الشهر",
+"type_customization":"تخصيص الأنواع",
+"incomplete_message":"ستظهر سجلات المرضى المتبقي عليهم دفعات",
+"incomplete_payments_nodata":"لا يوجد مرضى متبقي عليهم دفعات",
+"expense_description":"وصف المصروف",
+"date":"التاريخ",
+"preferences":"اللغة و التنسيق"
 }

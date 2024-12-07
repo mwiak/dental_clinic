@@ -1,6 +1,7 @@
 import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/shared/custom_widgets/headers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../shared/custom_widgets/patient_inpayment_entry.dart';
 
@@ -77,18 +78,18 @@ class _IncompletedPaymentsState extends State<IncompletedPayments> {
     return Center(
         child: Column(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 500,
-          child: Text('ستظهر سجلات المرضى المتبقي عليهم دفعات'),
+          child: Text(AppLocalizations.of(context)!.incomplete_message),
         ),
         const Divider(),
-        const SizedBox(
+        SizedBox(
           width: 500,
           child: RemindersHeader(
-            title1: 'اسم المريض',
-            title2: 'إجمالي الفواتير',
-            title3: 'إجمالي الدفعات',
-            title4: 'المبلغ المتبقي',
+            title1: AppLocalizations.of(context)!.patient_name,
+            title2: AppLocalizations.of(context)!.total_invoices,
+            title3: AppLocalizations.of(context)!.total_incoming_payments,
+            title4: AppLocalizations.of(context)!.remaining,
           ),
         ),
         const Divider(),
@@ -100,8 +101,9 @@ class _IncompletedPaymentsState extends State<IncompletedPayments> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                    child: Text('لا يوجد مرضى متبقي عليهم دفعات'));
+                return Center(
+                    child: Text(AppLocalizations.of(context)!
+                        .incomplete_payments_nodata));
               } else {
                 return SizedBox(
                   height: 400,

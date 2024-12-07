@@ -50,73 +50,114 @@ class _SettingsState extends State<Settings> {
       child: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                FilledButton(
-                    child: const Text('customize treatments types'),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(FluentPageRoute(
-                          builder: (context) => TreatmentsCustomization()));
-                    }),
-                FilledButton(
-                    child: const Text('customize implants types'),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(FluentPageRoute(
-                          builder: (context) => ImplantsCustomization()));
-                    }),
-                FilledButton(
-                    child: const Text('customize general treatments types'),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(FluentPageRoute(
-                          builder: (context) =>
-                              GeneralTreatmentsCustomization()));
-                    })
-              ],
+            Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(AppLocalizations.of(context)!.type_customization),
+                  Divider(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      FilledButton(
+                          child: const Text('customize treatments types'),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                FluentPageRoute(
+                                    builder: (context) =>
+                                        TreatmentsCustomization()));
+                          }),
+                      FilledButton(
+                          child: const Text('customize implants types'),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                FluentPageRoute(
+                                    builder: (context) =>
+                                        ImplantsCustomization()));
+                          }),
+                      FilledButton(
+                          child:
+                              const Text('customize general treatments types'),
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                FluentPageRoute(
+                                    builder: (context) =>
+                                        GeneralTreatmentsCustomization()));
+                          })
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Row(
-              children: [
-                ComboBox<String>(
-                  value: selectedLanguage,
-                  items: const [
-                    ComboBoxItem(
-                      value: 'English',
-                      child: Text('English'),
+            SizedBox(
+              height: 50,
+            ),
+            Card(
+              child: SizedBox(
+                width: 360,
+                child: Column(
+                  children: [
+                    Text(AppLocalizations.of(context)!.preferences),
+                    Divider(),
+                    SizedBox(
+                      height: 20,
                     ),
-                    ComboBoxItem(
-                      value: 'Arabic',
-                      child: Text('العربية'),
-                    )
-                  ],
-                  onChanged: (val) {
-                    Provider.of<UserProvider>(context, listen: false)
-                        .modifyLanguage(val!);
-                    setState(() => selectedLanguage = val ?? 'English');
-                  },
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                ComboBox<String>(
-                  value: mode,
-                  items: [
-                    ComboBoxItem(
-                      value: 'light',
-                      child: Text(AppLocalizations.of(context)!.light),
+                    SizedBox(
+                      width: 300,
+                      child: Row(
+                        children: [
+                          ComboBox<String>(
+                            value: selectedLanguage,
+                            items: const [
+                              ComboBoxItem(
+                                value: 'English',
+                                child: Text('English'),
+                              ),
+                              ComboBoxItem(
+                                value: 'Arabic',
+                                child: Text('العربية'),
+                              )
+                            ],
+                            onChanged: (val) {
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .modifyLanguage(val!);
+                              setState(
+                                  () => selectedLanguage = val ?? 'English');
+                            },
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          ComboBox<String>(
+                            value: mode,
+                            items: [
+                              ComboBoxItem(
+                                value: 'light',
+                                child:
+                                    Text(AppLocalizations.of(context)!.light),
+                              ),
+                              ComboBoxItem(
+                                value: 'dark',
+                                child: Text(AppLocalizations.of(context)!.dark),
+                              )
+                            ],
+                            onChanged: (val) {
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .modifyDark(val!);
+                              setState(() => mode = val ?? 'light');
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    ComboBoxItem(
-                      value: 'dark',
-                      child: Text(AppLocalizations.of(context)!.dark),
-                    )
                   ],
-                  onChanged: (val) {
-                    Provider.of<UserProvider>(context, listen: false)
-                        .modifyDark(val!);
-                    setState(() => mode = val ?? 'light');
-                  },
                 ),
-              ],
+              ),
             )
           ],
         ),
