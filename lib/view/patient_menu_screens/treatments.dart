@@ -4,6 +4,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../database/sqflite.dart';
 import '../../shared/custom_widgets/tooth_treatment.dart';
+import 'multiple_teeth_treatment.dart';
+import 'multiple_tooth_treatment_menu.dart';
 
 class Treatments extends StatefulWidget {
   final int patientId;
@@ -16,9 +18,22 @@ class Treatments extends StatefulWidget {
 class _TreatmentsState extends State<Treatments>
     with AutomaticKeepAliveClientMixin {
   SqlDb dataHelper = SqlDb();
-
+  final GlobalKey<MultipleToothTreatmentMenuState> childKey = GlobalKey();
   int activeToothCode = 0;
   PageController pageController = PageController();
+  bool isGeneral = false;
+  List selectedCodes = [];
+  List getSelectedTeethCodes() {
+    return [];
+  }
+
+  void onPressed(int value, bool flag) {
+    if (flag) {
+      selectedCodes.add(value);
+    } else {
+      selectedCodes.remove(value);
+    }
+  }
 
   void updateActiveToothCode(int code) {
     setState(() {
@@ -43,6 +58,86 @@ class _TreatmentsState extends State<Treatments>
       ));
     }
     return items;
+  }
+
+  void showAddMultipleTreatmentDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, s) {
+        return ContentDialog(
+          constraints: const BoxConstraints(
+              minWidth: 200, minHeight: 200, maxHeight: 400, maxWidth: 900),
+          title: Text('علاج عدة أسنان'),
+          content: ListView(children: [
+            MultipleTeethTreatment(
+              selectedCodes: selectedCodes,
+              isGeneral: false,
+              onIsGeneralChanged: (newValue) {
+                isGeneral = newValue;
+              },
+              description:
+                  'اختر الأسنان, سيتم إضافة علاج مشترك للأسنان التي يتم اختيارها',
+            )
+          ]),
+          actions: [
+            Button(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.pop(context, 'User deleted file');
+                selectedCodes = [];
+                // Delete file here
+              },
+            ),
+            FilledButton(
+              child: Text('التالي'),
+              onPressed: () {
+                Navigator.pop(context, 'User deleted file');
+                showAddMultipleTreatmentMenu(context, selectedCodes, isGeneral);
+                selectedCodes = [];
+              },
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  void showAddMultipleTreatmentMenu(
+      BuildContext context, List codes, bool isGeneral) async {
+    print(isGeneral);
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, s) {
+        return ContentDialog(
+          constraints: const BoxConstraints(
+              minWidth: 200, minHeight: 200, maxHeight: 600, maxWidth: 500),
+          title: Text(AppLocalizations.of(context)!.add_treatment),
+          content: MultipleToothTreatmentMenu(
+            key: childKey,
+            patientId: widget.patientId,
+            codes: codes,
+            dataHelper: dataHelper,
+            isGeneral: isGeneral,
+          ),
+          actions: [
+            Button(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.pop(context);
+                selectedCodes = [];
+                // Delete file here
+              },
+            ),
+            FilledButton(
+              child: Text('add'),
+              onPressed: () async {
+                childKey.currentState!.validateRequiredFields();
+              },
+            ),
+          ],
+        );
+      }),
+    );
   }
 
   @override
@@ -153,16 +248,31 @@ class _TreatmentsState extends State<Treatments>
                               SizedBox(
                                 height: 150,
                                 child: Center(
-                                  child: Button(
-                                      onPressed: () {
-                                        setState(() {
-                                          activeToothCode = 0;
-                                          pageController
-                                              .jumpToPage(activeToothCode);
-                                        });
-                                      },
-                                      child: Text(AppLocalizations.of(context)!
-                                          .general_treatments)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Button(
+                                          onPressed: () {
+                                            setState(() {
+                                              activeToothCode = 0;
+                                              pageController
+                                                  .jumpToPage(activeToothCode);
+                                            });
+                                          },
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .general_treatments)),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Button(
+                                          onPressed: () {
+                                            showAddMultipleTreatmentDialog(
+                                                context);
+                                          },
+                                          child: Text('علاج عدة أسنان')),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Row(

@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
 //class for database calls
 class SqlDb {
   static Database? _db;
@@ -24,23 +25,6 @@ class SqlDb {
   }
 
   _onUpgrade(Database db, int oldversion, int newversion) async {
-    await db.execute('''
-  CREATE TABLE expenses (
-    id INTEGER PRIMARY KEY, 
-    description TEXT,
-    date TEXT,
-    amount REAL   
-     )
-   ''');
-    await db.execute('''
-  CREATE TABLE backup (
-    id INTEGER PRIMARY KEY, 
-    token TEXT,
-     is_enabled INTEGER,
-    date TEXT
-    
-     )
-   ''');
     print("onUpgrade =====================================");
   }
 
@@ -68,7 +52,8 @@ class SqlDb {
     await db.execute('''
   CREATE TABLE prices (
     id INTEGER PRIMARY KEY  , 
-    exchange REAL 
+    exchange REAL, 
+    syrian_pound_exchange REAL
      )
    ''');
 
@@ -91,7 +76,7 @@ class SqlDb {
   CREATE TABLE treatments (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    tooth_code INTEGER,
+    tooth_code TEXT,
     treatment TEXT,
     details TEXT,
     date TEXT,
@@ -117,7 +102,7 @@ class SqlDb {
   CREATE TABLE implants (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    tooth_code INTEGER,
+    tooth_code TEXT,
     type TEXT,
     details TEXT,
     dates TEXT,
@@ -232,38 +217,11 @@ class SqlDb {
       )
     ''');
 
-    await db.insert('treatment_types', {'name': 'Filling'});
     await db.insert(
-      'custom_fields',
-      {
-        'field_name': 'Filling Material',
-        'field_type': 'dropdown',
-        'treatment_type_id': '1',
-      },
-    );
-    await db.insert(
-      'field_options',
-      {
-        'option_value': 'Metal',
-        'custom_field_id': '1',
-      },
+      'prices',
+      {'exchange': '34.10', 'syrian_pound_exchange': '10900.00'},
     );
 
-    await db.insert(
-      'field_options',
-      {
-        'option_value': 'Zircon',
-        'custom_field_id': '1',
-      },
-    );
-
-    await db.insert(
-      'field_options',
-      {
-        'option_value': 'Khazaf',
-        'custom_field_id': '1',
-      },
-    );
     print(" onCreate =====================================");
   }
 

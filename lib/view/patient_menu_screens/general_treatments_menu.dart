@@ -170,6 +170,7 @@ class _GeneralTreatmentsMenuState extends State<GeneralTreatmentsMenu> {
 
     selectedType = null;
     costC.clear();
+    dateC.clear();
     notesC.clear();
   }
 
@@ -184,8 +185,7 @@ class _GeneralTreatmentsMenuState extends State<GeneralTreatmentsMenu> {
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, s) {
         return ContentDialog(
-          constraints: const BoxConstraints(
-              minWidth: 200, minHeight: 200, maxHeight: 600, maxWidth: 500),
+          constraints: const BoxConstraints(maxHeight: 600, maxWidth: 500),
           title: Row(
             children: [
               Text(AppLocalizations.of(context)!.modify_treatment),
@@ -338,9 +338,13 @@ class _GeneralTreatmentsMenuState extends State<GeneralTreatmentsMenu> {
                                         }),
                                   ),
                                   Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.centerRight,
                                     child: Text(snapshot.data![i]['cost']
                                         .toStringAsFixed(2)),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(snapshot.data![i]['date']),
                                   ),
                                 ],
                               )),

@@ -148,5 +148,10 @@
 "incomplete_payments_nodata":"لا يوجد مرضى متبقي عليهم دفعات",
 "expense_description":"وصف المصروف",
 "date":"التاريخ",
-"preferences":"اللغة و التنسيق"
+"preferences":"اللغة و التنسيق",
+"customize_treatments_types":"تخصيص أنواع العلاجات",
+"customize_general_treatments_types":"تخصيص أنواع العلاجات العامة",
+"customize_implants_types":"تخصيص أنواع الزرعات",
+"payments_delete_message":"لا يمكن تعديل أو حذف الدفعة بعد الإضافة",
+"usd_price":"سعر صرف الدولار"
 }

@@ -23,7 +23,11 @@ class _ToothTreatmentsState extends State<ToothTreatments> {
 
   Future<void> checkForPreviousEntries() async {
     List data = await dataHelper.readData(
-        '''SELECT * FROM treatments WHERE patient_id = ${widget.patientId} AND tooth_code = ${widget.code}   ''');
+        ''' SELECT * FROM treatments WHERE patient_id = ${widget.patientId} AND EXISTS (
+    SELECT 1
+    FROM json_each(tooth_code)
+    WHERE value = ${widget.code}
+  )''');
 
     if (data.isEmpty) {
       standardColor = Colors.white;

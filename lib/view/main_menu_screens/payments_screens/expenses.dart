@@ -93,7 +93,7 @@ class _ExpensesState extends State<Expenses> {
               SizedBox(
                 height: 5,
               ),
-              CostBox(
+              PriceFieldE(
                   label: AppLocalizations.of(context)!.amount,
                   controller: amountC),
               SizedBox(

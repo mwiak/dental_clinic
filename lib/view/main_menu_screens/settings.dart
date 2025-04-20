@@ -1,3 +1,5 @@
+import 'package:dental_clinic/model/api/syrian_pound_scrapper.dart';
+import 'package:dental_clinic/shared/custom_widgets/exchange_rate_panel.dart';
 import 'package:dental_clinic/shared/theme.dart';
 import 'package:dental_clinic/view/main_menu_screens/general_treatments_customization.dart';
 import 'package:dental_clinic/view/main_menu_screens/implants_customization.dart';
@@ -65,7 +67,8 @@ class _SettingsState extends State<Settings> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       FilledButton(
-                          child: const Text('customize treatments types'),
+                          child: Text(AppLocalizations.of(context)!
+                              .customize_treatments_types),
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                                 FluentPageRoute(
@@ -73,7 +76,8 @@ class _SettingsState extends State<Settings> {
                                         TreatmentsCustomization()));
                           }),
                       FilledButton(
-                          child: const Text('customize implants types'),
+                          child: Text(AppLocalizations.of(context)!
+                              .customize_implants_types),
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                                 FluentPageRoute(
@@ -81,8 +85,8 @@ class _SettingsState extends State<Settings> {
                                         ImplantsCustomization()));
                           }),
                       FilledButton(
-                          child:
-                              const Text('customize general treatments types'),
+                          child: Text(AppLocalizations.of(context)!
+                              .customize_general_treatments_types),
                           onPressed: () {
                             Navigator.of(context).pushReplacement(
                                 FluentPageRoute(
@@ -92,6 +96,42 @@ class _SettingsState extends State<Settings> {
                     ],
                   ),
                 ],
+              ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Card(
+              child: SizedBox(
+                width: 700,
+                child: Column(
+                  children: [
+                    Text('سعر صرف دولار/ليرة تركية'),
+                    Divider(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ExchangeRatePanel(),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Card(
+              child: SizedBox(
+                width: 700,
+                child: Column(
+                  children: [
+                    Text('سعر صرف دولار/ليرة سورية'),
+                    Divider(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ExchangeRateSyrianPanel(),
+                  ],
+                ),
               ),
             ),
             SizedBox(

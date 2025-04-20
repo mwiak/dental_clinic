@@ -148,7 +148,12 @@
 "incomplete_payments_nodata":"All invoices have been paid",
 "expense_description":"expense description",
 "date":"date",
-"preferences":"preferences"
+"preferences":"preferences",
+"customize_treatments_types":"customize treatments types",
+"customize_general_treatments_types":"customize general treatments types",
+"customize_implants_types":"customize implants types",
+"payments_delete_message":"payments can't be modified or deleted once added",
+"usd_price":"USD price exchange rate"
 
 
 

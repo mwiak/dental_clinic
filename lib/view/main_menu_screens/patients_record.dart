@@ -270,6 +270,13 @@ class _PatientsRecordState extends State<PatientsRecord> {
     setState(() {});
   }
 
+  Future<void> cleanDB() async {
+    await dataHelper.deleteData(''' DELETE  FROM payments''');
+    await dataHelper.deleteData(''' DELETE  FROM patients''');
+    await dataHelper.deleteData(''' DELETE  FROM user''');
+    print('delelelelellelellelelete');
+  }
+
   @override
   void initState() {
     super.initState();

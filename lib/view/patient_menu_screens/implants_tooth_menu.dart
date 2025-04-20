@@ -13,6 +13,7 @@ import 'package:dental_clinic/shared/custom_widgets/flyout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../shared/custom_widgets/multiple_teeth_show.dart';
 import '../../shared/custom_widgets/text_boxes.dart';
 
 class ImplantsToothMenu extends StatefulWidget {
@@ -226,18 +227,22 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
         Navigator.of(context).pop();
         setState(() {});
       } else {
-        showBar(context, 'added', InfoBarSeverity.error);
+        showBar(context, AppLocalizations.of(context)!.failed,
+            InfoBarSeverity.error);
       }
     } else {
-      showBar(context, '* is required', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
   Future<int> saveNewImplant(
       String details, String dates, num cost, String notes) async {
+    List codes = [widget.toothCode];
+    String code = jsonEncode(codes);
     int response = await widget.dataHelper.insertData(
         '''INSERT INTO implants (patient_id,tooth_code,type,details,dates,date,cost,notes) 
-    VALUES (${widget.patientId},${widget.toothCode},'$selectedType','$details', '$dates','${dateC.text}', $cost, '$notes') ''');
+    VALUES (${widget.patientId},'$code','$selectedType','$details', '$dates','${dateC.text}', $cost, '$notes') ''');
     return response;
   }
 
@@ -245,13 +250,21 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
 
   Future<List> getAllTreatments() async {
     List data = await widget.dataHelper.readData(
-        ''' SELECT * FROM implants WHERE patient_id = ${widget.patientId} AND tooth_code = ${widget.toothCode}''');
+        ''' SELECT * FROM implants WHERE patient_id = ${widget.patientId} AND EXISTS (
+    SELECT 1
+    FROM json_each(tooth_code)
+    WHERE value = ${widget.toothCode}
+  )''');
     return data;
   }
 
   Future<num> getToothTotalCost() async {
     List data = await widget.dataHelper.readData(
-        ''' SELECT SUM(cost) as total FROM implants WHERE patient_id = ${widget.patientId} AND tooth_code = ${widget.toothCode}''');
+        ''' SELECT SUM(cost) as total FROM implants WHERE patient_id = ${widget.patientId} AND EXISTS (
+    SELECT 1
+    FROM json_each(tooth_code)
+    WHERE value = ${widget.toothCode}
+  )''');
     num total = data[0]['total'] ?? 0;
 
     return total;
@@ -286,7 +299,8 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
       String notes = notesC.text.trim();
       modifyImplant(id, cost, dates, details, notes);
     } else {
-      showBar(context, '* cant be empty', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
@@ -451,6 +465,34 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
     notesC.clear();
   }
 
+  void showMultipleTreatmentDialog(BuildContext context, List codes) async {
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, s) {
+        return ContentDialog(
+          constraints: const BoxConstraints(
+              minWidth: 200, minHeight: 200, maxHeight: 400, maxWidth: 900),
+          title: Text('الأسنان المرتبطة بالزرعة'),
+          content: ListView(children: [
+            MultipleTeethShow(
+              codes: codes,
+            )
+          ]),
+          actions: [
+            Button(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.pop(context, 'User deleted file');
+
+                // Delete file here
+              },
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -521,6 +563,9 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
                     return ListView.separated(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, i) {
+                        List codes =
+                            jsonDecode(snapshot.data![i]['tooth_code']);
+                        bool isMultiple = codes.length > 1;
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(5, 5, 5, 10),
                           child: SizedBox(
@@ -535,10 +580,26 @@ class _ImplantsToothMenuState extends State<ImplantsToothMenu> {
                                               context, snapshot.data![i]);
                                         }),
                                   ),
+                                  Positioned(
+                                      top: 1,
+                                      right: 2,
+                                      child: isMultiple
+                                          ? OutlinedButton(
+                                              onPressed: () {
+                                                showMultipleTreatmentDialog(
+                                                    context, codes);
+                                              },
+                                              child: Text('زرعة مشتركة'),
+                                            )
+                                          : SizedBox.shrink()),
                                   Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.bottomRight,
                                     child: Text(snapshot.data![i]['cost']
                                         .toStringAsFixed(2)),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(snapshot.data![i]['date']),
                                   ),
                                 ],
                               )),

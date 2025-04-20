@@ -11,6 +11,8 @@ import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../shared/custom_widgets/flyout.dart';
+
 class PatientPayments extends StatefulWidget {
   final int patientId;
   const PatientPayments({super.key, required this.patientId});
@@ -89,6 +91,29 @@ class _PatientPaymentsState extends State<PatientPayments> {
     } else {}
   }
 
+  Future<void> modifyPayment(
+      int id, String cause, num amount, String date, String notes) async {
+    int response = await dataHelper.updateData(
+        ''' UPDATE payments SET title = '$cause', amount = $amount ,date = '$date',notes = '$notes' WHERE id = $id ''');
+    if (response > 0) {
+      Navigator.of(context).pop();
+      setState(() {});
+    } else {
+      showBar(context, 'skjghjgjhgjhgh', InfoBarSeverity.error);
+    }
+  }
+
+  Future<void> deletePayment(int id) async {
+    int response =
+        await dataHelper.deleteData(''' DELETE FROM payments WHERE id = $id''');
+    if (response > 0) {
+      Navigator.of(context).pop();
+      setState(() {});
+    } else {
+      showBar(context, '', InfoBarSeverity.error);
+    }
+  }
+
   void validateAddPayment() {
     if (paymentC.text.isNotEmpty && dateC.text.isNotEmpty) {
       String cause = causeC.text.trim();
@@ -96,6 +121,18 @@ class _PatientPaymentsState extends State<PatientPayments> {
       String date = dateC.text;
       String notes = notesC.text.trim();
       saveNewPayment(cause, amount, date, notes);
+    } else {
+      showBar(context, '* required', InfoBarSeverity.warning);
+    }
+  }
+
+  void validateModifyPayment(int id) {
+    if (paymentC.text.isNotEmpty && dateC.text.isNotEmpty) {
+      String cause = causeC.text.trim();
+      num amount = num.parse(paymentC.text);
+      String date = dateC.text;
+      String notes = notesC.text.trim();
+      modifyPayment(id, cause, amount, date, notes);
     } else {
       showBar(context, '* required', InfoBarSeverity.warning);
     }
@@ -121,7 +158,7 @@ class _PatientPaymentsState extends State<PatientPayments> {
               SizedBox(
                 height: 5,
               ),
-              CostBox(
+              PriceFieldE(
                   label: AppLocalizations.of(context)!.amount,
                   controller: paymentC),
               SizedBox(
@@ -138,6 +175,9 @@ class _PatientPaymentsState extends State<PatientPayments> {
               InputText(
                   controller: notesC,
                   label: AppLocalizations.of(context)!.notes),
+              SizedBox(
+                height: 10,
+              ),
             ],
           ),
           actions: [
@@ -158,7 +198,94 @@ class _PatientPaymentsState extends State<PatientPayments> {
         );
       }),
     );
+    causeC.clear();
+    paymentC.clear();
+    dateC.clear();
+    notesC.clear();
+  }
 
+  void showModifyPaymentDialog(BuildContext context, Map paymentData) async {
+    int paymentId = paymentData['id'];
+    causeC.text = paymentData['title'];
+    paymentC.text = paymentData['amount'].toStringAsFixed(2);
+    dateC.text = paymentData['date'];
+    notesC.text = paymentData['notes'];
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, s) {
+        return ContentDialog(
+          constraints: BoxConstraints(maxHeight: 500, maxWidth: 550),
+          title: Row(
+            children: [
+              Text(AppLocalizations.of(context)!.generic_modify),
+              Spacer(),
+              BasicFlyout(
+                  warning: AppLocalizations.of(context)!.generic_warning,
+                  onProceed: () {
+                    deletePayment(paymentId);
+                  },
+                  action:
+                      AppLocalizations.of(context)!.generic_delete_confirmation,
+                  buttonText: AppLocalizations.of(context)!.generic_delete)
+            ],
+          ),
+          content: Column(
+            children: [
+              MouseRegion(
+                onHover: null,
+                child: InfoEntrySmall(
+                  controller: causeC,
+                  label: AppLocalizations.of(context)!.payment_cause,
+                  readOnly: true,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              PriceFieldE(
+                  label: AppLocalizations.of(context)!.amount,
+                  controller: paymentC),
+              SizedBox(
+                height: 5,
+              ),
+              DatePickerBasic(
+                label: AppLocalizations.of(context)!.payment_date,
+                value: dateC,
+                requiredSymbol: '*',
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              InputText(
+                  controller: notesC,
+                  label: AppLocalizations.of(context)!.notes),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+          actions: [
+            Button(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.pop(context);
+                // Delete file here
+              },
+            ),
+            FilledButton(
+              child: Text(AppLocalizations.of(context)!.generic_modify),
+              onPressed: () {
+                validateModifyPayment(paymentId);
+              },
+            ),
+          ],
+        );
+      }),
+    );
+    causeC.clear();
+    paymentC.clear();
+    dateC.clear();
     notesC.clear();
   }
 
@@ -236,22 +363,30 @@ class _PatientPaymentsState extends State<PatientPayments> {
                             } else if (snapshot.hasError) {
                               return SizedBox.shrink();
                             } else if (snapshot.data == 0) {
-                              return Text('no data');
+                              return Text(
+                                  AppLocalizations.of(context)!.no_data);
                             } else {
                               return SizedBox(
                                 width: 500,
                                 child: ListView.builder(
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, i) {
+                                      int id = snapshot.data![i]['id'];
                                       String title = snapshot.data![i]['title'];
                                       num amount = snapshot.data![i]['amount'];
                                       String date = snapshot.data![i]['date'];
                                       String notes = snapshot.data![i]['notes'];
-                                      return PaymentEntry(
-                                          title: title,
-                                          amount: amount,
-                                          date: date,
-                                          notes: notes);
+                                      return PaymentSEntry(
+                                        id: id,
+                                        title: title,
+                                        amount: amount,
+                                        date: date,
+                                        notes: notes,
+                                        onTap: () {
+                                          showModifyPaymentDialog(
+                                              context, snapshot.data![i]);
+                                        },
+                                      );
                                     }),
                               );
                             }
