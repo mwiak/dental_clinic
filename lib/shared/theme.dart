@@ -26,7 +26,8 @@ FluentThemeData darkMode = FluentThemeData(
   cardColor: Color(0xFF212731), // Dark card background with blue tint
   typography: Typography.raw(
     display: TextStyle(color: Color(0xFFE0E0E0)), // Light gray text for headers
-    title: TextStyle(color: Color(0xFFE0E0E0)), // Titles and emphasized text
+    title: TextStyle(
+        color: Color(0xFFE0E0E0), fontSize: 26), // Titles and emphasized text
     body: TextStyle(color: Color(0xFFD1D1D1)), // Regular body text
     caption:
         TextStyle(color: Color(0xFFB0B0B0)), // Captions and less important text

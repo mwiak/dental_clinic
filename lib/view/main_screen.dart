@@ -1,7 +1,9 @@
 import 'package:dental_clinic/view/main_menu_screens/patients_record.dart';
 import 'package:dental_clinic/view/main_menu_screens/payments.dart';
 import 'package:dental_clinic/view/main_menu_screens/reminders.dart';
+import 'package:dental_clinic/view/main_menu_screens/remote_users_page.dart';
 import 'package:dental_clinic/view/main_menu_screens/settings.dart';
+import 'package:dental_clinic/view/main_menu_screens/waiting_list_page.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -44,6 +46,11 @@ class _MainScreenState extends State<MainScreen> {
               title: Text(AppLocalizations.of(context)!.patients_record),
               body: PatientsRecord(),
             ),
+            PaneItem(
+              icon: const Icon(FluentIcons.list),
+              title: Text('قائمة الانتظار'),
+              body: WaitingListPage(),
+            ),
             PaneItemSeparator(thickness: 1),
             PaneItem(
               icon: const Icon(FluentIcons.circle_dollar),
@@ -55,6 +62,13 @@ class _MainScreenState extends State<MainScreen> {
               title: Text(AppLocalizations.of(context)!.notifications),
               body: NavigationView(
                 content: Reminders(),
+              ),
+            ),
+            PaneItem(
+              icon: const Icon(FluentIcons.remote_application),
+              title: Text('remote users'),
+              body: NavigationView(
+                content: RemoteUsersPage(),
               ),
             ),
             PaneItem(

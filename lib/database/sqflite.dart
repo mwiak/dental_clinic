@@ -50,6 +50,16 @@ class SqlDb {
    ''');
 
     await db.execute('''
+  CREATE TABLE remote_user (
+    id INTEGER PRIMARY KEY  , 
+    name TEXT ,
+    device TEXT,
+    token TEXT
+    
+     )
+   ''');
+
+    await db.execute('''
   CREATE TABLE prices (
     id INTEGER PRIMARY KEY  , 
     exchange REAL, 
