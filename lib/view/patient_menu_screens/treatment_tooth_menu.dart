@@ -132,7 +132,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
         result.add(InfoEntrySmall(
           controller: controller,
           label: pair.keys.first,
-          readOnly: false,
+          readOnly: true,
         ));
       }
     }
@@ -234,9 +234,9 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
 
   //modify
   Future<void> modifyTreatment(
-      int id, String date, num cost, String notes) async {
+      int id, String date, num cost, String notes, String details) async {
     int response = await widget.dataHelper.updateData(
-        ''' UPDATE treatments SET date = '$date', cost = $cost ,notes = '$notes' WHERE id = $id''');
+        ''' UPDATE treatments SET date = '$date', cost = $cost ,notes = '$notes', details = '$details' WHERE id = $id''');
     if (response > 0) {
       Navigator.of(context).pop();
       setState(() {});
@@ -248,7 +248,9 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
       String date = dateC.text;
       num cost = num.parse(costC.text);
       String notes = notesC.text.trim();
-      modifyTreatment(id, date, cost, notes);
+      String details = jsonEncode(formatCustomFieldsValues());
+
+      modifyTreatment(id, date, cost, notes, details);
     } else {
       showBar(context, AppLocalizations.of(context)!.title_required,
           InfoBarSeverity.warning);
@@ -321,6 +323,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
     );
 
     selectedType = null;
+    controllersForCustomFields = [];
     costC.clear();
     notesC.clear();
   }
@@ -405,6 +408,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
     );
 
     selectedType = null;
+    controllersForCustomFields = [];
     costC.clear();
     dateC.clear();
     notesC.clear();

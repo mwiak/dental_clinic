@@ -2,10 +2,13 @@ import 'dart:convert';
 
 import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/view/Register.dart';
+import 'package:dental_clinic/view/activation_page.dart';
+import 'package:dental_clinic/view_model/activation_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../model/encryption/windows_encryption.dart';
 import '../view_model/user_provider.dart';
 import 'main_screen.dart';
 
@@ -22,6 +25,7 @@ class _InitializerState extends State<Initializer> {
   Future<void> checkForUser(context) async {
     List data =
         await dataHelper.readData('''SELECT * FROM user WHERE id = 1''');
+    await Future.delayed(Duration(seconds: 1));
     if (data.isEmpty) {
       Navigator.of(context).pushReplacement(
         FluentPageRoute(
@@ -30,10 +34,36 @@ class _InitializerState extends State<Initializer> {
       );
     } else {
       Provider.of<UserProvider>(context, listen: false).getUserData();
-      Future.delayed(const Duration(seconds: 2));
+
+      await Future.delayed(const Duration(seconds: 1));
       Navigator.of(context).pushReplacement(
         FluentPageRoute(
           builder: (context) => const MainScreen(),
+        ),
+      );
+    }
+  }
+
+  Future<void> checkForActToken(BuildContext context) async {
+    String? token = await WindowsSecureStorage.readToken();
+    if (token != null) {
+      bool isTokenValid = token.endsWith('0x12');
+      if (isTokenValid) {
+        String result = token.substring(0, token.length - 4);
+        await Provider.of<ActivationProvider>(context, listen: false)
+            .loginOptional(context, result);
+        checkForUser(context);
+      } else {
+        Navigator.of(context).pushReplacement(
+          FluentPageRoute(
+            builder: (context) => const ActivationPage(),
+          ),
+        );
+      }
+    } else {
+      Navigator.of(context).pushReplacement(
+        FluentPageRoute(
+          builder: (context) => const ActivationPage(),
         ),
       );
     }
@@ -43,14 +73,23 @@ class _InitializerState extends State<Initializer> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      checkForUser(context);
+      checkForActToken(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      content: Center(child: ProgressBar()),
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/Denta.png'),
+          SizedBox(
+            height: 30,
+          ),
+          ProgressBar(),
+        ],
+      ),
     );
   }
 }

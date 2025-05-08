@@ -22,6 +22,38 @@ class _MainScreenState extends State<MainScreen> {
   int topIndex = 0;
   var displayMode = PaneDisplayMode.compact;
 
+  void showDemoBanner(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return ContentDialog(
+              constraints: BoxConstraints(
+                  minWidth: 300, minHeight: 400, maxWidth: 300, maxHeight: 500),
+              content: Column(
+                children: [
+                  Text(''' مرحبًا بك في تطبيق Denta!
+يسرّنا انضمامك إلى نسختنا التجريبية، حيث يمكنك الاستفادة من جميع ميزات النسخة الكاملة.                    
+ابدأ اليوم بإدارة ملفات مرضاك بسهولة وفعالية — مع العلم أن النسخة التجريبية تتيح لك تسجيل حتى 25 مريضًا.                         
+نتمنى لك تجربة مميزة، وندعوك لاستكشاف كل ما يقدمه التطبيق لتسهيل عملك اليومي!                            ''')
+                ],
+              ),
+              actions: [
+                Button(
+                    child: Text('إغلاق'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })
+              ]);
+        });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return NavigationView(

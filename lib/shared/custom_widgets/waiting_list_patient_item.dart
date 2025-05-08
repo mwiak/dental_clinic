@@ -6,8 +6,11 @@ class WaitingListPatientItem extends StatefulWidget {
   final Function onRemove;
   final Function onOpen;
 
-
-  const WaitingListPatientItem({super.key, required this.data, required this.onRemove, required this.onOpen});
+  const WaitingListPatientItem(
+      {super.key,
+      required this.data,
+      required this.onRemove,
+      required this.onOpen});
 
   @override
   State<WaitingListPatientItem> createState() => _WaitingListPatientItemState();
@@ -30,26 +33,36 @@ class _WaitingListPatientItemState extends State<WaitingListPatientItem> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 300,
-      height: 60,
-      child: Card(
-        child: Row(
-          textDirection: TextDirection.rtl,
-          children: [
-            Expanded(child: Text(firstname)),
-            Expanded(child: Text(lastname)),
-            Expanded(child: Text(age)),
-            Button(child: Text('open'), onPressed: () {
-              widget.onOpen();
-            }),
-            SizedBox(
-              width: 2,
-            ),
-            Button(child: Text('remove'), onPressed: () {
-              widget.onRemove();
-            }),
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: SizedBox(
+        width: 300,
+        height: 60,
+        child: Card(
+          child: Row(
+            textDirection: TextDirection.rtl,
+            children: [
+              Expanded(
+                  child: Text.rich(TextSpan(text: firstname, children: [
+                TextSpan(text: '  '),
+                TextSpan(text: lastname)
+              ]))),
+              Expanded(child: Text(age)),
+              Button(
+                  child: Text('فتح ملف المريض'),
+                  onPressed: () {
+                    widget.onOpen();
+                  }),
+              SizedBox(
+                width: 5,
+              ),
+              Button(
+                  child: Text('إزالة من القائمة'),
+                  onPressed: () {
+                    widget.onRemove();
+                  }),
+            ],
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:dental_clinic/database/sqflite.dart';
@@ -6,11 +7,13 @@ import 'package:dental_clinic/model/remote_server/apis.dart';
 import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:dental_clinic/view_model/remote_users_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'dart:math';
 import 'package:lottie/lottie.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class ServerService {
   static final ServerService _instance = ServerService._internal();
@@ -27,6 +30,7 @@ class ServerService {
   Function(Map data)? onWaitingListAdd;
   Function()? onWaitingListGet;
   Function(int)? onWaitingListRemove;
+  Function()? onPatientAdded;
 
   Function()? onAuthCodeGenerated;
   Function()? onAuthCodeValidGenerated;
@@ -36,9 +40,12 @@ class ServerService {
   SqlDb dataHelper = SqlDb();
   HttpServer? server;
 
+  FutureOr<Response> Function(Request)? newHandler;
+
   List<Map<int, bool>> connectedDevices = [];
 
   List<RemoteUser> connections = [];
+  List<dynamic> webSockets = [];
 
   Future<bool> checkForToken(String token, dynamic webSocket) async {
     bool matched = false;
@@ -106,7 +113,7 @@ class ServerService {
   void startServer(String localIp) async {
     final handler = webSocketHandler((webSocket) async {
       print("📡 Client connected");
-
+      webSockets.add(webSocket);
       bool isAuthenticated = false;
 
       webSocket.stream.listen((message) async {
@@ -176,12 +183,15 @@ class ServerService {
               await saveNewPatientAPI(firstName, lastName, age, phone, date);
           webSocket.sink.add(jsonEncode(
               {"type": "patient_add_response", "response": response}));
+          onPatientAdded?.call();
         }
       }, onDone: () {
         print("❌ Client disconnected");
         onClientConnected?.call();
         removeClient(webSocket);
         isAuthenticated = false;
+        print('closing the sink');
+        webSocket.sink.close();
       });
     });
 
@@ -196,10 +206,12 @@ class ServerService {
 
   void startNewServer(BuildContext context, String localIp) async {
     String generatedCode = generateCode();
-    showAuthDialog(context, generatedCode, localIp);
+    String qrPayload = jsonEncode({'ip': localIp, 'code': generatedCode});
+    showAuthDialog(context, generatedCode, localIp, qrPayload);
 
     final handler = webSocketHandler((webSocket) async {
       print("📡 Client connected");
+      webSockets.add(webSocket);
 
       bool isAuthenticated = false;
       String center = await getCenterName();
@@ -263,7 +275,11 @@ class ServerService {
     if (server != null) {
       print("Closing server...");
       await server!.close(force: true);
-
+      print('closing the sockets');
+      for (dynamic s in webSockets) {
+        s.sink.close();
+      }
+      webSockets = [];
       server = null;
       connections = [];
       onClientConnected?.call();
@@ -272,7 +288,8 @@ class ServerService {
     }
   }
 
-  void showAuthDialog(BuildContext context, String code, String ip) async {
+  void showAuthDialog(
+      BuildContext context, String code, String ip, String qr) async {
     await showDialog(
       context: context,
       builder: (context) => Consumer<RemoteUsersProvider>(
@@ -285,7 +302,13 @@ class ServerService {
                 Consumer<RemoteUsersProvider>(builder: (context, value, child) {
                   if (value.loadingAuthScreenFlag == 'n') {
                     return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        QrImageView(
+                          data: qr,
+                          version: QrVersions.auto,
+                          size: 200.0,
+                        ),
                         Text('رمز التحقق'),
                         SizedBox(
                           height: 10,
@@ -304,6 +327,7 @@ class ServerService {
                     );
                   } else if (value.loadingAuthScreenFlag == 'valid') {
                     return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Lottie.asset(
                             repeat: true,
@@ -315,6 +339,7 @@ class ServerService {
                     );
                   } else {
                     return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Lottie.asset(
                             repeat: true,
@@ -324,6 +349,11 @@ class ServerService {
                         Text('رمز التحقق'),
                         SizedBox(
                           height: 10,
+                        ),
+                        QrImageView(
+                          data: qr,
+                          version: QrVersions.auto,
+                          size: 200.0,
                         ),
                         Text(code),
                         SizedBox(

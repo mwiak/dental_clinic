@@ -135,7 +135,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 20,
             ),
             Card(
               child: SizedBox(
@@ -198,7 +198,43 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Card(
+              child: SizedBox(
+                width: 360,
+                child: Column(
+                  children: [
+                    Text('خدمة العملاء'),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Divider(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: Row(
+                        textDirection: TextDirection.ltr,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                              width: 40, height: 40, 'assets/whatsup.png'),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                              textDirection: TextDirection.ltr, '+963959459372')
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

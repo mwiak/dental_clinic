@@ -50,6 +50,10 @@ class RemoteUsersProvider extends ChangeNotifier {
     serverService.onAuthDialogClosed = () {
       loadingAuthScreenFlag = 'n';
     };
+
+    serverService.onPatientAdded = () {
+      notifyListeners();
+    };
   }
   SqlDb dataHelper = SqlDb();
 
@@ -64,6 +68,8 @@ class RemoteUsersProvider extends ChangeNotifier {
   bool _isServing = false;
   bool get isServing => _isServing;
   bool isBroadcasting = false;
+  RawDatagramSocket? socket;
+  StreamSubscription<RawSocketEvent>? udpSocketListener;
 
   UDP? sender;
 
@@ -83,7 +89,7 @@ class RemoteUsersProvider extends ChangeNotifier {
         // Common private IP ranges
         if (!addr.isLoopback &&
             (addr.address.startsWith('192.168.0.') ||
-                addr.address.startsWith('10.'))) {
+                addr.address.startsWith('192.168.1.'))) {
           print(addr.address);
           return addr.address;
         }
@@ -96,7 +102,6 @@ class RemoteUsersProvider extends ChangeNotifier {
   void startBroadcast(String ip, int port) async {
     isBroadcasting = true;
     sender = await UDP.bind(Endpoint.any());
-    print('binding udp');
 
     final message = 'my_server_ip=$ip;port=$port';
 
@@ -105,9 +110,75 @@ class RemoteUsersProvider extends ChangeNotifier {
         utf8.encode(message),
         Endpoint.broadcast(port: Port(45678)),
       );
+      print(message);
       await Future.delayed(Duration(seconds: 2)); // adjust interval
     }
   }
+
+  void startMulticast(String ip, int port) async {
+    isBroadcasting = true;
+    sender = await UDP.bind(Endpoint.any());
+
+    final message = 'my_server_ip=$ip;port=$port';
+    final multicastAddress =
+        InternetAddress('239.0.0.1'); // A common multicast address
+
+    while (isBroadcasting) {
+      await sender!.send(
+        utf8.encode(message),
+        Endpoint.multicast(multicastAddress, port: Port(45678)),
+      );
+      print('Sent multicast message: $message');
+      await Future.delayed(Duration(seconds: 2)); // adjust interval
+    }
+  }
+
+  void startTestBroadcast() async {
+    isBroadcasting = true;
+    sender = await UDP.bind(Endpoint.any());
+
+    const message = 'hello hello king salman goody goody';
+
+    while (isBroadcasting) {
+      await sender!.send(
+        utf8.encode(message),
+        Endpoint.broadcast(port: Port(45678)),
+      );
+      print(message);
+      await Future.delayed(Duration(seconds: 1)); // adjust interval
+    }
+  }
+
+  void startDiscoveryService(String ip, String port) async {
+    socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 8888);
+    socket?.broadcastEnabled = true;
+    print('Server listening on ${socket?.address.address}:${socket?.port}');
+
+    udpSocketListener = socket?.listen((event) {
+      if (event == RawSocketEvent.read) {
+        final datagram = socket?.receive();
+        if (datagram != null) {
+          final message = utf8.decode(datagram.data);
+          print(
+              'Received: $message from ${datagram.address.address}:${datagram.port}');
+          // Optionally, send a response back
+          final response = utf8.encode('my_server_ip=$ip;port=$port');
+          socket?.send(response, datagram.address, datagram.port);
+        }
+      }
+    });
+  }
+
+  void stopDiscoveryService() async {
+    if (socket != null && udpSocketListener != null) {
+      socket!.close();
+      udpSocketListener!.cancel();
+      socket = null;
+      udpSocketListener = null;
+    }
+  }
+
+  void stopDiscovery() async {}
 
   void stopBroadcast() async {
     if (sender != null) {
@@ -120,7 +191,8 @@ class RemoteUsersProvider extends ChangeNotifier {
   void startServerLogic() async {
     String? ip = await getLocalIp();
     if (ip != null) {
-      startBroadcast(ip, 8080);
+      // startBroadcast(ip, 8080);
+      startDiscoveryService(ip, '8080');
       startServer(ip);
     }
   }
@@ -128,7 +200,6 @@ class RemoteUsersProvider extends ChangeNotifier {
   void startNewServerLogic(BuildContext context) async {
     String? ip = await getLocalIp();
     if (ip != null) {
-      startBroadcast(ip, 8080);
       startNewServer(context, ip);
     }
   }
@@ -153,7 +224,7 @@ class RemoteUsersProvider extends ChangeNotifier {
   }
 
   void stopServer() async {
-    stopBroadcast();
+    stopDiscoveryService();
     serverService.stopServer();
     await Future.delayed(Duration(seconds: 2));
     connectionStatus = [];

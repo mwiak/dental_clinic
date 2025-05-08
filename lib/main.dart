@@ -3,8 +3,10 @@ import 'package:dental_clinic/model/remote_server/server.dart';
 import 'package:dental_clinic/service_locater/get_it.dart';
 import 'package:dental_clinic/view/Register.dart';
 import 'package:dental_clinic/view/initializer.dart';
+import 'package:dental_clinic/view_model/activation_provider.dart';
 import 'package:dental_clinic/view_model/custome_field_provider.dart';
 import 'package:dental_clinic/view_model/exchange_rate_provider.dart';
+import 'package:dental_clinic/view_model/navigationService.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
 import 'package:dental_clinic/view_model/reminders_provider.dart';
 import 'package:dental_clinic/view_model/remote_users_provider.dart';
@@ -30,6 +32,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => RemindersProvider()),
     ChangeNotifierProvider(create: (_) => ExchangeRateProvider()),
     ChangeNotifierProvider(create: (_) => RemoteUsersProvider()),
+    ChangeNotifierProvider(create: (_) => ActivationProvider()),
   ], child: const MyApp()));
 }
 
@@ -45,6 +48,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+      navigatorKey: NavigationService.navigatorKey,
       theme: Provider.of<UserProvider>(context).themeMode, // Light theme
       localizationsDelegates: const [
         AppLocalizations.delegate,

@@ -3,6 +3,7 @@ import 'package:dental_clinic/shared/custom_widgets/patient_item.dart';
 import 'package:dental_clinic/shared/custom_widgets/text_boxes.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patient_screen.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
+import 'package:dental_clinic/view_model/remote_users_provider.dart';
 import 'package:dental_clinic/view_model/user_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -463,46 +464,55 @@ class _PatientsRecordState extends State<PatientsRecord> {
             const Divider(
               style: DividerThemeData(thickness: 2),
             ),
-            Expanded(
-              child: FutureBuilder(
-                  future: getPatientLogic(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: ProgressRing());
-                    } else if (snapshot.hasError) {
-                      print(snapshot.error.toString());
-                      return Text(snapshot.error.toString());
-                    } else {
-                      if (patientCardMode == 'compact') {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 12,
-                                      crossAxisSpacing: 10,
-                                      mainAxisSpacing: 5),
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, i) {
-                                return PatientItem(
-                                  patientData: snapshot.data![i],
-                                );
-                              }),
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, i) {
-                                return PatientDetailedItem(
-                                  patientData: snapshot.data![i],
-                                );
-                              }),
-                        );
-                      }
-                    }
-                  }),
+            Consumer<RemoteUsersProvider>(
+              builder: (context, value, child) {
+                return Expanded(
+                  child: FutureBuilder(
+                      future: getPatientLogic(context),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: ProgressRing());
+                        } else if (snapshot.hasError) {
+                          print(snapshot.error.toString());
+                          return Text(snapshot.error.toString());
+                        } else if (snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Text('السجل فارغ'),
+                          );
+                        } else {
+                          if (patientCardMode == 'compact') {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 12,
+                                          crossAxisSpacing: 10,
+                                          mainAxisSpacing: 5),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, i) {
+                                    return PatientItem(
+                                      patientData: snapshot.data![i],
+                                    );
+                                  }),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListView.builder(
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, i) {
+                                    return PatientDetailedItem(
+                                      patientData: snapshot.data![i],
+                                    );
+                                  }),
+                            );
+                          }
+                        }
+                      }),
+                );
+              },
             )
           ],
         ),

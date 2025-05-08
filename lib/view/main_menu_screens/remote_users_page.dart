@@ -89,6 +89,19 @@ class _RemoteUsersPageState extends State<RemoteUsersPage> {
                   provider.stopServer();
                 }
               }),
+          // ToggleButton(
+          //     child: Text('start king salman broadcast'),
+          //     checked: context.watch<RemoteUsersProvider>().isServing,
+          //     onChanged: (val) {
+          //       final provider = context.read<RemoteUsersProvider>();
+          //       provider.toggleServing(val);
+          //
+          //       if (val) {
+          //         // provider.startDiscoveryService();
+          //       } else {
+          //         provider.stopBroadcast();
+          //       }
+          //     }),
           const SizedBox(
             height: 20,
           ),
@@ -104,9 +117,7 @@ class _RemoteUsersPageState extends State<RemoteUsersPage> {
             height: 20,
           ),
           Consumer<RemoteUsersProvider>(builder: (context, value, child) {
-            return SizedBox(
-              width: 400,
-              height: 500,
+            return Expanded(
               child: ListView.builder(
                   itemCount: value.devices.length,
                   itemBuilder: (context, i) {
