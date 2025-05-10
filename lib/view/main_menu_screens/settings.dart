@@ -9,6 +9,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../shared/custom_widgets/text_boxes.dart';
+
 //screen for setting user preferences
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -20,6 +22,46 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   String selectedLanguage = 'English';
   String mode = 'light';
+
+  void showModifyCenterDialog(BuildContext context) async {
+    TextEditingController centerC = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (context) => ContentDialog(
+        constraints: BoxConstraints(maxWidth: 300, maxHeight: 250),
+        title: Text('تعديل اسم المركز'),
+        content: Column(
+          children: [
+            InputText(
+              controller: centerC,
+              label: 'اسم المركز',
+              requiredSymbol: '*',
+            ),
+          ],
+        ),
+        actions: [
+          Button(
+            child: Text(AppLocalizations.of(context)!.cancel),
+            onPressed: () {
+              Navigator.pop(context);
+              // Delete file here
+            },
+          ),
+          FilledButton(
+            child: Text(AppLocalizations.of(context)!.generic_modify),
+            onPressed: () {
+              if (centerC.text.isNotEmpty) {
+                Provider.of<UserProvider>(context, listen: false)
+                    .modifyCenter(centerC.text.trim());
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -137,67 +179,98 @@ class _SettingsState extends State<Settings> {
             SizedBox(
               height: 20,
             ),
-            Card(
-              child: SizedBox(
-                width: 360,
-                child: Column(
-                  children: [
-                    Text(AppLocalizations.of(context)!.preferences),
-                    Divider(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 300,
-                      child: Row(
-                        children: [
-                          ComboBox<String>(
-                            value: selectedLanguage,
-                            items: const [
-                              ComboBoxItem(
-                                value: 'English',
-                                child: Text('English'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  child: SizedBox(
+                    width: 360,
+                    child: Column(
+                      children: [
+                        Text(AppLocalizations.of(context)!.preferences),
+                        Divider(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Row(
+                            children: [
+                              ComboBox<String>(
+                                value: selectedLanguage,
+                                items: const [
+                                  ComboBoxItem(
+                                    value: 'English',
+                                    child: Text('English'),
+                                  ),
+                                  ComboBoxItem(
+                                    value: 'Arabic',
+                                    child: Text('العربية'),
+                                  )
+                                ],
+                                onChanged: (val) {
+                                  Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .modifyLanguage(val!);
+                                  setState(() =>
+                                      selectedLanguage = val ?? 'English');
+                                },
                               ),
-                              ComboBoxItem(
-                                value: 'Arabic',
-                                child: Text('العربية'),
-                              )
-                            ],
-                            onChanged: (val) {
-                              Provider.of<UserProvider>(context, listen: false)
-                                  .modifyLanguage(val!);
-                              setState(
-                                  () => selectedLanguage = val ?? 'English');
-                            },
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          ComboBox<String>(
-                            value: mode,
-                            items: [
-                              ComboBoxItem(
-                                value: 'light',
-                                child:
-                                    Text(AppLocalizations.of(context)!.light),
+                              SizedBox(
+                                width: 20,
                               ),
-                              ComboBoxItem(
-                                value: 'dark',
-                                child: Text(AppLocalizations.of(context)!.dark),
-                              )
+                              ComboBox<String>(
+                                value: mode,
+                                items: [
+                                  ComboBoxItem(
+                                    value: 'light',
+                                    child: Text(
+                                        AppLocalizations.of(context)!.light),
+                                  ),
+                                  ComboBoxItem(
+                                    value: 'dark',
+                                    child: Text(
+                                        AppLocalizations.of(context)!.dark),
+                                  )
+                                ],
+                                onChanged: (val) {
+                                  Provider.of<UserProvider>(context,
+                                          listen: false)
+                                      .modifyDark(val!);
+                                  setState(() => mode = val ?? 'light');
+                                },
+                              ),
                             ],
-                            onChanged: (val) {
-                              Provider.of<UserProvider>(context, listen: false)
-                                  .modifyDark(val!);
-                              setState(() => mode = val ?? 'light');
-                            },
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(
+                  width: 10,
+                ),
+                Card(
+                  child: SizedBox(
+                    width: 250,
+                    child: Row(
+                      children: [
+                        Text('اسم المركز:'),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(context.watch<UserProvider>().center),
+                        Spacer(),
+                        Button(
+                            child: Text('تعديل'),
+                            onPressed: () {
+                              showModifyCenterDialog(context);
+                            })
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 20,

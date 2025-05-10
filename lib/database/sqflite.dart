@@ -19,13 +19,23 @@ class SqlDb {
     String path = join(databasepath, 'archive.db');
 
     Database mydb = await openDatabase(path,
-        onCreate: _onCreate, version: 1, onUpgrade: _onUpgrade);
+        onCreate: _onCreate, version: 2, onUpgrade: _onUpgrade);
     await mydb.execute('PRAGMA foreign_keys = ON');
     return mydb;
   }
 
   _onUpgrade(Database db, int oldversion, int newversion) async {
     print("onUpgrade =====================================");
+
+    await db.execute('''
+  CREATE TABLE remote_user (
+    id INTEGER PRIMARY KEY  , 
+    name TEXT ,
+    device TEXT,
+    token TEXT
+    
+     )
+     ''');
   }
 
   deleteDP() async {

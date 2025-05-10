@@ -13,7 +13,7 @@
 "add_new_patient" : "إضافة مريض جديد",
 "first_name" : "الاسم الأول",
 "last_name" : "الكنية",
-"age": "العمر",
+"age": "سنة الميلاد",
 "phone": "رقم الهاتف",
 "medical_history": "سوابق مرضية",
 "surgery_history": "سوابق جراحية",

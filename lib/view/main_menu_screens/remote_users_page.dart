@@ -89,19 +89,6 @@ class _RemoteUsersPageState extends State<RemoteUsersPage> {
                   provider.stopServer();
                 }
               }),
-          // ToggleButton(
-          //     child: Text('start king salman broadcast'),
-          //     checked: context.watch<RemoteUsersProvider>().isServing,
-          //     onChanged: (val) {
-          //       final provider = context.read<RemoteUsersProvider>();
-          //       provider.toggleServing(val);
-          //
-          //       if (val) {
-          //         // provider.startDiscoveryService();
-          //       } else {
-          //         provider.stopBroadcast();
-          //       }
-          //     }),
           const SizedBox(
             height: 20,
           ),
@@ -118,24 +105,28 @@ class _RemoteUsersPageState extends State<RemoteUsersPage> {
           ),
           Consumer<RemoteUsersProvider>(builder: (context, value, child) {
             return Expanded(
-              child: ListView.builder(
-                  itemCount: value.devices.length,
-                  itemBuilder: (context, i) {
-                    return SavedUser(
-                      id: value.devices[i]['id'],
-                      name: value.devices[i]['name'],
-                      device: value.devices[i]['device'],
-                      isConnected: value.devices[i]['flag'],
-                      onChangeName: () {
-                        showModifyUserNameDialog(context,
-                            value.devices[i]['name'], value.devices[i]['id']);
-                      },
-                      onDelete: () {
-                        Provider.of<RemoteUsersProvider>(context, listen: false)
-                            .deleteUser(value.devices[i]['id']);
-                      },
-                    );
-                  }),
+              child: SizedBox(
+                width: 450,
+                child: ListView.builder(
+                    itemCount: value.devices.length,
+                    itemBuilder: (context, i) {
+                      return SavedUser(
+                        id: value.devices[i]['id'],
+                        name: value.devices[i]['name'],
+                        device: value.devices[i]['device'],
+                        isConnected: value.devices[i]['flag'],
+                        onChangeName: () {
+                          showModifyUserNameDialog(context,
+                              value.devices[i]['name'], value.devices[i]['id']);
+                        },
+                        onDelete: () {
+                          Provider.of<RemoteUsersProvider>(context,
+                                  listen: false)
+                              .deleteUser(value.devices[i]['id']);
+                        },
+                      );
+                    }),
+              ),
             );
           })
         ],

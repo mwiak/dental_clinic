@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dental_clinic/model/encryption/windows_encryption.dart';
 import 'package:dental_clinic/shared/custom_widgets/barboxes.dart';
 import 'package:dental_clinic/shared/public_methods/device_info.dart';
@@ -9,7 +9,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'navigationService.dart';
 
 class ActivationProvider extends ChangeNotifier {
@@ -50,7 +50,13 @@ class ActivationProvider extends ChangeNotifier {
         if (response['status'] == 200) {
           Map body = jsonDecode(response["body"]);
           String token = body["token"];
-          await WindowsSecureStorage.saveToken(token);
+          if (Platform.isWindows) {
+            await WindowsSecureStorage.saveToken(token);
+          } else if (Platform.isMacOS) {
+            final secureStorage = FlutterSecureStorage();
+            await secureStorage.write(key: 'd1t1_auth', value: token);
+          }
+
           // navigateTo(context, Initializer());
           toggleActFlag('valid');
         } else {
@@ -77,7 +83,13 @@ class ActivationProvider extends ChangeNotifier {
           Map body = jsonDecode(response["body"]);
           String flag = body["response"];
           if (flag == 'forget') {
-            await WindowsSecureStorage.deleteToken();
+            if (Platform.isWindows) {
+              await WindowsSecureStorage.deleteToken();
+            } else if (Platform.isMacOS) {
+              final secureStorage = FlutterSecureStorage();
+              await secureStorage.delete(key: 'd1t1_auth');
+            }
+
             print('deleted forever');
           }
         } else {}

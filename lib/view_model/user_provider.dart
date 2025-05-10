@@ -1,3 +1,4 @@
+import 'package:dental_clinic/model/remote_server/apis.dart';
 import 'package:dental_clinic/model/user_model.dart';
 import 'package:dental_clinic/shared/theme.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -82,5 +83,14 @@ class UserProvider extends ChangeNotifier {
       await userModel.modifyDisplayMode(val);
       notifyListeners();
     } else {}
+  }
+
+  Future<void> modifyCenter(String newCenter) async {
+    int response = await dataHelper.updateData(
+        ''' UPDATE user SET center =  '$newCenter' WHERE id = 1  ''');
+    if (response > 0) {
+      center = newCenter;
+      notifyListeners();
+    }
   }
 }

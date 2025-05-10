@@ -31,6 +31,7 @@ class ServerService {
   Function()? onWaitingListGet;
   Function(int)? onWaitingListRemove;
   Function()? onPatientAdded;
+  Function(int)? onWaitingListCheck;
 
   Function()? onAuthCodeGenerated;
   Function()? onAuthCodeValidGenerated;
@@ -161,6 +162,12 @@ class ServerService {
           webSocket.sink.add(jsonEncode(
               {"type": "waiting_remove_response", "response": response}));
         }
+        if (data['type'] == 'check_in_list') {
+          int id = data['id'];
+          bool response = onWaitingListCheck?.call(id);
+          webSocket.sink.add(jsonEncode(
+              {"type": "waiting_check_response", "response": response}));
+        }
         if (data['type'] == 'getWaitingList') {
           List<Map> payload = onWaitingListGet?.call();
           print(payload);
@@ -169,6 +176,12 @@ class ServerService {
         }
         if (data['type'] == 'getSearched') {
           List patients = await getAllPatientsSearchedAPI(data['keywords']);
+          webSocket.sink.add(
+              jsonEncode({"type": "patient_payload", "payload": patients}));
+        }
+        if (data['type'] == 'getSearchedPhone') {
+          List patients =
+              await getAllPatientsSearchedPhoneAPI(data['keywords']);
           webSocket.sink.add(
               jsonEncode({"type": "patient_payload", "payload": patients}));
         }
@@ -183,6 +196,19 @@ class ServerService {
               await saveNewPatientAPI(firstName, lastName, age, phone, date);
           webSocket.sink.add(jsonEncode(
               {"type": "patient_add_response", "response": response}));
+          onPatientAdded?.call();
+        }
+
+        if (data['type'] == 'modify_patient') {
+          int id = data['id'];
+          String firstName = data['firstname'];
+          String lastName = data['lastname'];
+          String age = data['age'];
+          String phone = data['phone'];
+          int response =
+              await modifyPatientAPI(id, firstName, lastName, age, phone);
+          webSocket.sink.add(jsonEncode(
+              {"type": "patient_modify_response", "response": response}));
           onPatientAdded?.call();
         }
       }, onDone: () {
@@ -298,11 +324,14 @@ class ServerService {
             constraints: BoxConstraints(
                 minWidth: 300, minHeight: 400, maxWidth: 300, maxHeight: 500),
             content: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Consumer<RemoteUsersProvider>(builder: (context, value, child) {
                   if (value.loadingAuthScreenFlag == 'n') {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         QrImageView(
                           data: qr,
@@ -338,8 +367,7 @@ class ServerService {
                       ],
                     );
                   } else {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    return ListView(
                       children: [
                         Lottie.asset(
                             repeat: true,

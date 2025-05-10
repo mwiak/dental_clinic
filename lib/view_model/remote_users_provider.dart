@@ -37,6 +37,11 @@ class RemoteUsersProvider extends ChangeNotifier {
       return response;
     };
 
+    serverService.onWaitingListCheck = (int id) {
+      bool response = checkPatientInWaitingList(id);
+      return response;
+    };
+
     serverService.onAuthCodeValidGenerated = () {
       loadingAuthScreenFlag = 'valid';
       notifyListeners();
@@ -289,6 +294,12 @@ class RemoteUsersProvider extends ChangeNotifier {
     }
   }
 
+  bool checkPatientInWaitingList(int id) {
+    bool exists = waitingList.any((p) => p.id == id);
+    notifyListeners();
+    return exists;
+  }
+
   List<Map> getWaitingListPatientsInMaps() {
     List<Map> data = [];
 
@@ -298,6 +309,7 @@ class RemoteUsersProvider extends ChangeNotifier {
         'firstname': item.firstname,
         'lastname': item.lastname,
         'age': item.age,
+        'phone_number': item.phone
       };
     }).toList();
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/view/Register.dart';
 import 'package:dental_clinic/view/activation_page.dart';
@@ -45,7 +46,13 @@ class _InitializerState extends State<Initializer> {
   }
 
   Future<void> checkForActToken(BuildContext context) async {
-    String? token = await WindowsSecureStorage.readToken();
+    String? token;
+    if (Platform.isWindows) {
+      token = await WindowsSecureStorage.readToken();
+    } else if (Platform.isMacOS) {
+      final secureStorage = FlutterSecureStorage();
+      token = await secureStorage.read(key: 'd1t1_auth');
+    }
     if (token != null) {
       bool isTokenValid = token.endsWith('0x12');
       if (isTokenValid) {
