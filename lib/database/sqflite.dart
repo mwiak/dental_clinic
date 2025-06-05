@@ -28,7 +28,7 @@ class SqlDb {
     print("onUpgrade =====================================");
 
     await db.execute('''
-  CREATE TABLE remote_user (
+  CREATE TABLE IF NOT EXISTS remote_user  (
     id INTEGER PRIMARY KEY  , 
     name TEXT ,
     device TEXT,
