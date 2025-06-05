@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/model/remote_server/server.dart';
 import 'package:dental_clinic/service_locater/get_it.dart';
@@ -21,8 +23,10 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 //start point of the application
 void main() async {
   setup();
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  if (Platform.isWindows) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
 
   runApp(//defining multi providers and set them as the root
       MultiProvider(providers: [

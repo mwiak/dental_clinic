@@ -64,10 +64,12 @@ class ActivationProvider extends ChangeNotifier {
         }
       }
     } on SocketException catch (e) {
-      Navigator.of(context).pop();
+      print(e);
+      safePop(context);
       showBarWithC(context, 'لا يوجد اتصال بالانترنت');
     } catch (e) {
-      Navigator.of(context).pop();
+      print(e);
+      safePop(context);
       showBarWithC(context, 'حاول مجددا');
     }
   }
@@ -178,5 +180,11 @@ class ActivationProvider extends ChangeNotifier {
     );
     //reset
     toggleActFlag('n');
+  }
+
+  void safePop(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+    }
   }
 }
