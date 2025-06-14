@@ -10,7 +10,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class PatientScreen extends StatefulWidget {
   final int id;
   final String patientName;
-  const PatientScreen({super.key, required this.id, required this.patientName});
+  int? prePageIndex = 0;
+  int? index = 0;
+  PatientScreen(
+      {super.key,
+      required this.id,
+      required this.patientName,
+      this.prePageIndex,
+      this.index});
 
   @override
   State<PatientScreen> createState() => _PatientScreenState();
@@ -23,6 +30,7 @@ class _PatientScreenState extends State<PatientScreen> {
   @override
   void initState() {
     super.initState();
+    topIndex = widget.index ?? 0;
   }
 
   @override
@@ -37,8 +45,12 @@ class _PatientScreenState extends State<PatientScreen> {
                   size: 35,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                      FluentPageRoute(builder: (context) => MainScreen()));
+                  Navigator.of(context).pushReplacement(FluentPageRoute(
+                      builder: (context) => MainScreen(
+                            selectedIndex: widget.prePageIndex == 0
+                                ? 0
+                                : widget.prePageIndex,
+                          )));
                 }),
             title: Text.rich(TextSpan(
                 text: AppLocalizations.of(context)!.patient_data,

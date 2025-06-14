@@ -78,9 +78,16 @@ class _IncompletedPaymentsState extends State<IncompletedPayments> {
     return Center(
         child: Column(
       children: [
-        SizedBox(
-          width: 500,
-          child: Text(AppLocalizations.of(context)!.incomplete_message),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 500,
+              child: Center(
+                  child:
+                      Text(AppLocalizations.of(context)!.incomplete_message)),
+            ),
+          ],
         ),
         const Divider(),
         SizedBox(

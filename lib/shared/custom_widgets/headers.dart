@@ -12,14 +12,19 @@ class BasicHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 500,
-      child: Row(
-        children: [
-          Expanded(child: Text(title1)),
-          Expanded(child: Text(title2)),
-          Expanded(child: Text(title3)),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Container(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(width: 100, child: Text(title1)),
+            SizedBox(width: 80, child: Text(title2)),
+            SizedBox(width: 80, child: Text(title3)),
+            SizedBox(width: 80),
+          ],
+        ),
       ),
     );
   }
@@ -79,6 +84,48 @@ class GeneralRemindersHeader extends StatelessWidget {
           Expanded(child: Text(title4)),
           Expanded(child: Text(title5)),
         ],
+      ),
+    );
+  }
+}
+
+class HeaderWithButton extends StatelessWidget {
+  final String title1;
+  final String title2;
+  final String title3;
+  final Function onPressed;
+  final IconData iconValue;
+  const HeaderWithButton(
+      {super.key,
+      required this.title1,
+      required this.title2,
+      required this.title3,
+      required this.onPressed,
+      required this.iconValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Container(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(width: 100, child: Text(title1)),
+            SizedBox(width: 80, child: Text(title2)),
+            SizedBox(width: 80, child: Text(title3)),
+            SizedBox(
+              width: 80,
+              child: IconButton(
+                icon: Icon(iconValue),
+                onPressed: () {
+                  onPressed.call();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

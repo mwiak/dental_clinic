@@ -52,6 +52,8 @@ class _WaitingListPageState extends State<WaitingListPage> {
                                                     .waitingList[i].firstname +
                                                 ' ' +
                                                 value.waitingList[i].lastname,
+                                            prePageIndex: 1,
+                                            index: 1,
                                           )));
                             },
                           );

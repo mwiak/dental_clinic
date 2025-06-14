@@ -11,7 +11,7 @@ class UserProvider extends ChangeNotifier {
   String displayMode = '';
 
   FluentThemeData themeMode = lightMode;
-  Locale language = Locale('en');
+  Locale language = Locale('ar');
 
   Future<void> getUserData() async {
     List data = await userModel.getUserData();

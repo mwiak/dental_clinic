@@ -20,6 +20,7 @@ class _ToothTreatmentsState extends State<ToothTreatments> {
   SqlDb dataHelper = SqlDb();
   Color toothColor = Colors.white;
   Color standardColor = Colors.white;
+  int preCount = 0;
 
   Future<void> checkForPreviousEntries() async {
     List data = await dataHelper.readData(
@@ -32,8 +33,10 @@ class _ToothTreatmentsState extends State<ToothTreatments> {
     if (data.isEmpty) {
       standardColor = Colors.white;
       toothColor = standardColor;
+      preCount = 0;
     } else {
-      standardColor = Colors.blue.withOpacity(0.5);
+      preCount = data.length;
+      standardColor = Colors.blue.withOpacity(0.4);
       toothColor = standardColor;
     }
 
@@ -76,6 +79,9 @@ class _ToothTreatmentsState extends State<ToothTreatments> {
           builder: (context, states) {
             return Column(
               children: [
+                preCount != 0
+                    ? CircleAvatar(radius: 15, child: Text(preCount.toString()))
+                    : SizedBox.shrink(),
                 ColorFiltered(
                     colorFilter: ColorFilter.mode(
                       toothColor, // Adjust opacity for desired effect

@@ -1,4 +1,5 @@
 import 'package:dental_clinic/shared/custom_widgets/barboxes.dart';
+import 'package:dental_clinic/shared/public_methods/navigation.dart';
 import 'package:dental_clinic/shared/theme.dart';
 import 'package:dental_clinic/view/initializer.dart';
 import 'package:dental_clinic/view_model/activation_provider.dart';
@@ -37,7 +38,7 @@ class _ActivationPageState extends State<ActivationPage> {
     return NavigationView(
       content: Center(
         child: Container(
-          height: 300,
+          height: 340,
           width: 300,
           child: Column(
             children: [
@@ -66,7 +67,16 @@ class _ActivationPageState extends State<ActivationPage> {
                     }
                   }),
               SizedBox(
-                height: 60,
+                height: 30,
+              ),
+              Text('أو قم باستخدام النسخة التجريبية لإضافة 50 مريض على الأكثر'),
+              Button(
+                  child: Text('النسخة التجريبية'),
+                  onPressed: () {
+                    goTo(context, MainScreen());
+                  }),
+              SizedBox(
+                height: 10,
               ),
               Card(
                 child: SizedBox(

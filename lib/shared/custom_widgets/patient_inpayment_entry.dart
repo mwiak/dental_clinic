@@ -29,6 +29,8 @@ class _PatientEntryForPaymentsState extends State<PatientEntryForPayments> {
           builder: (context) => PatientScreen(
                 id: widget.patientId,
                 patientName: widget.name,
+                prePageIndex: 2,
+                index: 3,
               )),
     );
   }

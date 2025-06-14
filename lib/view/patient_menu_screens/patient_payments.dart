@@ -99,7 +99,8 @@ class _PatientPaymentsState extends State<PatientPayments> {
       Navigator.of(context).pop();
       setState(() {});
     } else {
-      showBar(context, 'skjghjgjhgjhgh', InfoBarSeverity.error);
+      showBar(
+          context, AppLocalizations.of(context)!.failed, InfoBarSeverity.error);
     }
   }
 
@@ -110,7 +111,8 @@ class _PatientPaymentsState extends State<PatientPayments> {
       Navigator.of(context).pop();
       setState(() {});
     } else {
-      showBar(context, '', InfoBarSeverity.error);
+      showBar(context, AppLocalizations.of(context)!.message_generic_success,
+          InfoBarSeverity.error);
     }
   }
 
@@ -122,7 +124,8 @@ class _PatientPaymentsState extends State<PatientPayments> {
       String notes = notesC.text.trim();
       saveNewPayment(cause, amount, date, notes);
     } else {
-      showBar(context, '* required', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
@@ -134,11 +137,81 @@ class _PatientPaymentsState extends State<PatientPayments> {
       String notes = notesC.text.trim();
       modifyPayment(id, cause, amount, date, notes);
     } else {
-      showBar(context, '* required', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
   void showAddPaymentDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(builder: (context, s) {
+        return ContentDialog(
+          constraints: BoxConstraints(maxHeight: 500, maxWidth: 550),
+          title: Text(AppLocalizations.of(context)!.add_payment),
+          content: Column(
+            children: [
+              MouseRegion(
+                onHover: null,
+                child: InfoEntrySmall(
+                  controller: causeC,
+                  label: AppLocalizations.of(context)!.payment_cause,
+                  readOnly: true,
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              PriceFieldE(
+                  label: AppLocalizations.of(context)!.amount,
+                  controller: paymentC),
+              SizedBox(
+                height: 5,
+              ),
+              DatePickerBasic(
+                label: AppLocalizations.of(context)!.payment_date,
+                value: dateC,
+                requiredSymbol: '*',
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              InputText(
+                  controller: notesC,
+                  label: AppLocalizations.of(context)!.notes),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+          actions: [
+            Button(
+              child: Text(AppLocalizations.of(context)!.cancel),
+              onPressed: () {
+                Navigator.pop(context);
+                // Delete file here
+              },
+            ),
+            FilledButton(
+              child: Text(AppLocalizations.of(context)!.add),
+              onPressed: () {
+                validateAddPayment();
+              },
+            ),
+          ],
+        );
+      }),
+    );
+    causeC.clear();
+    paymentC.clear();
+    dateC.clear();
+    notesC.clear();
+  }
+
+  void showAddFillingPaymentDialog(
+      BuildContext context, num amount, String cause) async {
+    causeC.text = cause;
+    paymentC.text = amount.toStringAsFixed(2);
     await showDialog(
       context: context,
       builder: (context) => StatefulBuilder(builder: (context, s) {
@@ -325,6 +398,7 @@ class _PatientPaymentsState extends State<PatientPayments> {
               children: [
                 Expanded(
                     child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -367,7 +441,6 @@ class _PatientPaymentsState extends State<PatientPayments> {
                                   AppLocalizations.of(context)!.no_data);
                             } else {
                               return SizedBox(
-                                width: 500,
                                 child: ListView.builder(
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, i) {
@@ -394,8 +467,12 @@ class _PatientPaymentsState extends State<PatientPayments> {
                     )
                   ],
                 )),
+                Divider(
+                  direction: Axis.vertical,
+                ),
                 Expanded(
                     child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -427,12 +504,11 @@ class _PatientPaymentsState extends State<PatientPayments> {
                               return SizedBox.shrink();
                             } else if (snapshot.hasError) {
                               return SizedBox.shrink();
-                            } else if (snapshot.data == 0) {
+                            } else if (snapshot.data?.length == 0) {
                               return Text(
                                   AppLocalizations.of(context)!.no_data);
                             } else {
                               return SizedBox(
-                                width: 500,
                                 child: ListView.builder(
                                     itemCount: snapshot.data!.length,
                                     itemBuilder: (context, i) {
@@ -442,10 +518,15 @@ class _PatientPaymentsState extends State<PatientPayments> {
                                           snapshot.data![i].date);
 
                                       return PaymentEntry(
-                                          title: title,
-                                          amount: amount,
-                                          date: date,
-                                          notes: '');
+                                        title: title,
+                                        amount: amount,
+                                        date: date,
+                                        notes: '',
+                                        onPay: () {
+                                          showAddFillingPaymentDialog(
+                                              context, amount, title);
+                                        },
+                                      );
                                     }),
                               );
                             }

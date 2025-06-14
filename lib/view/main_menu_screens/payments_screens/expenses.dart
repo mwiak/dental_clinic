@@ -1,3 +1,4 @@
+import 'package:dental_clinic/shared/custom_widgets/barboxes.dart';
 import 'package:dental_clinic/shared/custom_widgets/headers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,6 +43,9 @@ class _ExpensesState extends State<Expenses> {
       String date = dateC.text;
       num amount = num.parse(amountC.text);
       saveNewExpense(cause, date, amount);
+    } else {
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
@@ -79,14 +83,14 @@ class _ExpensesState extends State<Expenses> {
       builder: (context) => StatefulBuilder(builder: (context, s) {
         return ContentDialog(
           constraints: const BoxConstraints(maxHeight: 500, maxWidth: 550),
-          title: Text(AppLocalizations.of(context)!.add_payment),
+          title: Text('إضافة مصروف'),
           content: Column(
             children: [
               MouseRegion(
                 onHover: null,
                 child: InfoEntrySmall(
                   controller: causeC,
-                  label: AppLocalizations.of(context)!.payment_cause,
+                  label: 'سبب المصروف',
                   readOnly: true,
                 ),
               ),
@@ -99,9 +103,7 @@ class _ExpensesState extends State<Expenses> {
               SizedBox(
                 height: 5,
               ),
-              DatePickerBasic(
-                  label: AppLocalizations.of(context)!.payment_date,
-                  value: dateC),
+              DatePickerBasic(label: 'تاريخ المصروف', value: dateC),
               SizedBox(
                 height: 5,
               ),
@@ -144,7 +146,7 @@ class _ExpensesState extends State<Expenses> {
           constraints: const BoxConstraints(maxHeight: 500, maxWidth: 550),
           title: Row(
             children: [
-              Text(AppLocalizations.of(context)!.modify_implant),
+              Text(AppLocalizations.of(context)!.generic_modify),
               Spacer(),
               BasicFlyout(
                   warning: AppLocalizations.of(context)!.generic_warning,
@@ -162,7 +164,7 @@ class _ExpensesState extends State<Expenses> {
                 onHover: null,
                 child: InfoEntrySmall(
                   controller: causeC,
-                  label: AppLocalizations.of(context)!.payment_cause,
+                  label: 'سبب المصروف',
                   readOnly: true,
                 ),
               ),
@@ -176,7 +178,7 @@ class _ExpensesState extends State<Expenses> {
                 height: 5,
               ),
               DatePickerNullable(
-                label: AppLocalizations.of(context)!.payment_date,
+                label: 'تاريخ المصروف',
                 value: dateC,
                 date: dateC.text,
               ),
@@ -215,20 +217,21 @@ class _ExpensesState extends State<Expenses> {
       child: Column(
         children: [
           Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 width: 500,
-                child: BasicHeader(
-                    title1: AppLocalizations.of(context)!.expense_description,
-                    title2: AppLocalizations.of(context)!.amount,
-                    title3: AppLocalizations.of(context)!.date),
-              ),
-              IconButton(
+                child: HeaderWithButton(
+                  title1: AppLocalizations.of(context)!.expense_description,
+                  title2: AppLocalizations.of(context)!.amount,
+                  title3: AppLocalizations.of(context)!.date,
                   onPressed: () {
                     showAddExpenseDialog(context);
                   },
-                  icon: Icon(FluentIcons.add))
+                  iconValue: FluentIcons.add,
+                ),
+              ),
             ],
           ),
           Divider(),
@@ -253,16 +256,14 @@ class _ExpensesState extends State<Expenses> {
                         num cost = snapshot.data![index]['amount'];
                         String date = snapshot.data![index]['date'] ??
                             'لا يوجد تاريخ محدد';
-                        return GestureDetector(
-                          onTap: () {
+                        return ExpensesEntry(
+                          title: title,
+                          cost: cost,
+                          date: date,
+                          onPressed: () {
                             showModifyExpenseDialog(
                                 context, snapshot.data![index]);
                           },
-                          child: ExpensesEntry(
-                            title: title,
-                            cost: cost,
-                            date: date,
-                          ),
                         );
                       },
                     );

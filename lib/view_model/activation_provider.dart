@@ -57,7 +57,7 @@ class ActivationProvider extends ChangeNotifier {
             await secureStorage.write(key: 'd1t1_auth', value: token);
           }
 
-          // navigateTo(context, Initializer());
+          navigateTo(context, Initializer());
           toggleActFlag('valid');
         } else {
           toggleActFlag('invalid');

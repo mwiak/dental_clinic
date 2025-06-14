@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dental_clinic/database/sqflite.dart';
@@ -6,10 +5,9 @@ import 'package:dental_clinic/view/Register.dart';
 import 'package:dental_clinic/view/activation_page.dart';
 import 'package:dental_clinic/view_model/activation_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
 import '../model/encryption/windows_encryption.dart';
+import '../view_model/navigationService.dart';
 import '../view_model/user_provider.dart';
 import 'main_screen.dart';
 
@@ -39,7 +37,9 @@ class _InitializerState extends State<Initializer> {
       await Future.delayed(const Duration(seconds: 1));
       Navigator.of(context).pushReplacement(
         FluentPageRoute(
-          builder: (context) => const MainScreen(),
+          builder: (context) => MainScreen(
+            preEntry: 'Denta',
+          ),
         ),
       );
     }

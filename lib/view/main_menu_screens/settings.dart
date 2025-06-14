@@ -1,4 +1,5 @@
 import 'package:dental_clinic/model/api/syrian_pound_scrapper.dart';
+import 'package:dental_clinic/view_model/backup_provider.dart';
 import 'package:dental_clinic/shared/custom_widgets/exchange_rate_panel.dart';
 import 'package:dental_clinic/shared/theme.dart';
 import 'package:dental_clinic/view/main_menu_screens/general_treatments_customization.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../shared/custom_widgets/text_boxes.dart';
+import '../../view_model/navigationService.dart';
 
 //screen for setting user preferences
 class Settings extends StatefulWidget {
@@ -90,6 +92,7 @@ class _SettingsState extends State<Settings> {
         Provider.of<UserProvider>(context, listen: true).themeMode == darkMode
             ? 'dark'
             : 'light';
+    NavigationService.setOverlayContext(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(50.0),
@@ -141,7 +144,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             SizedBox(
-              height: 50,
+              height: 10,
             ),
             Card(
               child: SizedBox(
@@ -177,7 +180,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -273,40 +276,107 @@ class _SettingsState extends State<Settings> {
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 10,
             ),
-            Card(
-              child: SizedBox(
-                width: 360,
-                child: Column(
-                  children: [
-                    Text('خدمة العملاء'),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Divider(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      width: 300,
-                      child: Row(
-                        textDirection: TextDirection.ltr,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                              width: 40, height: 40, 'assets/whatsup.png'),
-                          SizedBox(
-                            width: 10,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  child: SizedBox(
+                    width: 360,
+                    child: Column(
+                      children: [
+                        Text('خدمة العملاء'),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Row(
+                            textDirection: TextDirection.ltr,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                  width: 40, height: 40, 'assets/whatsup.png'),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                  textDirection: TextDirection.ltr,
+                                  '+963959459372')
+                            ],
                           ),
-                          Text(
-                              textDirection: TextDirection.ltr, '+963959459372')
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                SizedBox(
+                  width: 20,
+                ),
+                Card(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minWidth: 400,
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text('مجلد النسخ الاحتياطي'),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Card(
+                              backgroundColor: Color(0xFFB2FF59),
+                              child: Text(context
+                                  .watch<BackupProvider>()
+                                  .activeDirectory),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Button(
+                                child: Text('تغير المجلد'),
+                                onPressed: () {
+                                  Provider.of<BackupProvider>(context,
+                                          listen: false)
+                                      .pickDirectory();
+                                })
+                          ],
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Divider(),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Row(
+                            textDirection: TextDirection.ltr,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Button(
+                                  child: Text('إنشاء نسخة الآن'),
+                                  onPressed: () {
+                                    Provider.of<BackupProvider>(context,
+                                            listen: false)
+                                        .newBackup();
+                                  })
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

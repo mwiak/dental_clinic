@@ -1,3 +1,4 @@
+import 'package:dental_clinic/view_model/teeth_implant_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'dart:convert';
@@ -12,6 +13,7 @@ import 'package:dental_clinic/shared/custom_widgets/flyout.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../shared/custom_widgets/text_boxes.dart';
 
@@ -224,7 +226,9 @@ class MultipleTeethImplantMenuState extends State<MultipleTeethImplantMenu> {
       String notes = notesC.text.trim();
       int response = await saveNewImplant(details, dates, cost, notes);
       if (response > 0) {
-        showBar(context, 'added', InfoBarSeverity.success);
+        showBar(context, AppLocalizations.of(context)!.success,
+            InfoBarSeverity.success);
+        Provider.of<TeethImplantProvider>(context, listen: false).notify();
         Navigator.of(context).pop();
         setState(() {});
       } else {

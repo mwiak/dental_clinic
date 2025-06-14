@@ -7,10 +7,12 @@ import 'package:dental_clinic/shared/custom_widgets/cost_box.dart';
 import 'package:dental_clinic/shared/custom_widgets/date_pickers.dart';
 import 'package:dental_clinic/shared/custom_widgets/drop_downs.dart';
 import 'package:dental_clinic/shared/custom_widgets/flyout.dart';
+import 'package:dental_clinic/view_model/teeth_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../shared/custom_widgets/multiple_teeth_show.dart';
 import '../../shared/custom_widgets/text_boxes.dart';
@@ -165,7 +167,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
 
   //saving
 
-  void validateRequiredFields() async {
+  void validateRequiredFields(BuildContext context) async {
     if (selectedType != null && dateC.text != '' && costC.text.isNotEmpty) {
       num cost = num.parse(costC.text.trim());
       String details = jsonEncode(formatCustomFieldsValues());
@@ -175,6 +177,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
       if (response > 0) {
         showBar(context, AppLocalizations.of(context)!.success,
             InfoBarSeverity.success);
+        Provider.of<TeethProvider>(context, listen: false).notify();
         Navigator.of(context).pop();
         setState(() {});
       } else {
@@ -227,30 +230,32 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
     int response = await widget.dataHelper
         .deleteData('''DELETE FROM treatments WHERE id = $id  ''');
     if (response > 0) {
+      Provider.of<TeethProvider>(context, listen: false).notify();
       Navigator.of(context).pop();
       setState(() {});
     }
   }
 
   //modify
-  Future<void> modifyTreatment(
-      int id, String date, num cost, String notes, String details) async {
+  Future<void> modifyTreatment(BuildContext context, int id, String date,
+      num cost, String notes, String details) async {
     int response = await widget.dataHelper.updateData(
         ''' UPDATE treatments SET date = '$date', cost = $cost ,notes = '$notes', details = '$details' WHERE id = $id''');
     if (response > 0) {
+      Provider.of<TeethProvider>(context, listen: false).notify();
       Navigator.of(context).pop();
       setState(() {});
     }
   }
 
-  void validateModify(int id) {
+  void validateModify(BuildContext context, int id) {
     if (dateC.text.isNotEmpty && costC.text.isNotEmpty) {
       String date = dateC.text;
       num cost = num.parse(costC.text);
       String notes = notesC.text.trim();
       String details = jsonEncode(formatCustomFieldsValues());
 
-      modifyTreatment(id, date, cost, notes, details);
+      modifyTreatment(context, id, date, cost, notes, details);
     } else {
       showBar(context, AppLocalizations.of(context)!.title_required,
           InfoBarSeverity.warning);
@@ -314,7 +319,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
             FilledButton(
               child: Text(AppLocalizations.of(context)!.add),
               onPressed: () {
-                validateRequiredFields();
+                validateRequiredFields(context);
               },
             ),
           ],
@@ -399,7 +404,7 @@ class _TreatmentToothMenuState extends State<TreatmentToothMenu> {
             FilledButton(
               child: Text(AppLocalizations.of(context)!.generic_modify),
               onPressed: () {
-                validateModify(treatmentData['id']);
+                validateModify(context, treatmentData['id']);
               },
             ),
           ],

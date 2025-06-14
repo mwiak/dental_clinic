@@ -64,14 +64,17 @@ class _GeneralTreatmentsMenuState extends State<GeneralTreatmentsMenu> {
       String notes = notesC.text.trim();
       int response = await saveNewTreatment(dateC.text, cost, notes);
       if (response > 0) {
-        showBar(context, 'added', InfoBarSeverity.success);
+        showBar(context, AppLocalizations.of(context)!.message_generic_success,
+            InfoBarSeverity.success);
         Navigator.of(context).pop();
         setState(() {});
       } else {
-        showBar(context, 'not added', InfoBarSeverity.error);
+        showBar(context, AppLocalizations.of(context)!.message_generic_fail,
+            InfoBarSeverity.error);
       }
     } else {
-      showBar(context, '* is required', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 
@@ -92,7 +95,8 @@ class _GeneralTreatmentsMenuState extends State<GeneralTreatmentsMenu> {
       String notes = notesC.text.trim();
       modifyTreatment(id, date, cost, notes);
     } else {
-      showBar(context, '* cant be empty', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 

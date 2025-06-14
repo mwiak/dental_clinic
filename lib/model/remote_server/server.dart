@@ -5,6 +5,7 @@ import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/model/entities/remote_user.dart';
 import 'package:dental_clinic/model/remote_server/apis.dart';
 import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
+import 'package:dental_clinic/shared/public_methods/pre_entry.dart';
 import 'package:dental_clinic/view_model/remote_users_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:http/http.dart';
@@ -17,6 +18,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class ServerService {
   static final ServerService _instance = ServerService._internal();
+  static String preEntry = '';
+  static setPreEntry(String value) {
+    preEntry = value;
+  }
 
   factory ServerService() => _instance;
 
@@ -191,12 +196,30 @@ class ServerService {
           String age = data['age'];
           String phone = data['phone'];
           String date = currentDateToString(DateTime.now());
-
-          int response =
-              await saveNewPatientAPI(firstName, lastName, age, phone, date);
-          webSocket.sink.add(jsonEncode(
-              {"type": "patient_add_response", "response": response}));
-          onPatientAdded?.call();
+          bool flag = await checkForS(preEntry);
+          if (flag) {
+            int response =
+                await saveNewPatientAPI(firstName, lastName, age, phone, date);
+            webSocket.sink.add(jsonEncode(
+                {"type": "patient_add_response", "response": response}));
+            if (response > 0) {
+              Map patientData = {
+                'firstname': firstName,
+                'lastname': lastName,
+                'age': age,
+                'date': date
+              };
+              String patientDataString = jsonEncode(patientData);
+              webSocket.sink.add(jsonEncode({
+                "type": "open_patient_response",
+                "response": patientDataString
+              }));
+            }
+            onPatientAdded?.call();
+          } else {
+            webSocket.sink.add(
+                jsonEncode({"type": "patient_add_response", "response": 0}));
+          }
         }
 
         if (data['type'] == 'modify_patient') {

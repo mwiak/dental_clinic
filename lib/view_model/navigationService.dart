@@ -5,4 +5,9 @@ class NavigationService {
       GlobalKey<NavigatorState>();
 
   static BuildContext? get context => navigatorKey.currentContext;
+
+  static BuildContext? _overlayContext;
+  static void setOverlayContext(BuildContext ctx) => _overlayContext = ctx;
+
+  static BuildContext? get overlayContext => _overlayContext;
 }

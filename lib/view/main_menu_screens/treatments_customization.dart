@@ -367,8 +367,12 @@ class _TreatmentsCustomizationState extends State<TreatmentsCustomization> {
           leading: IconButton(
               icon: Icon(FluentIcons.arrow_down_right8),
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    FluentPageRoute(builder: (context) => MainScreen()));
+                Navigator.pushReplacement(
+                    context,
+                    FluentPageRoute(
+                        builder: (context) => MainScreen(
+                              selectedIndex: 5,
+                            )));
               })),
       content: Center(
         child: Padding(

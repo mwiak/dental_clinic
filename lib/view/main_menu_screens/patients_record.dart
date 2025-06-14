@@ -1,6 +1,7 @@
 import 'package:dental_clinic/database/sqflite.dart';
 import 'package:dental_clinic/shared/custom_widgets/patient_item.dart';
 import 'package:dental_clinic/shared/custom_widgets/text_boxes.dart';
+import 'package:dental_clinic/shared/public_methods/pre_entry.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patient_screen.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
 import 'package:dental_clinic/view_model/remote_users_provider.dart';
@@ -16,7 +17,8 @@ import '../../shared/public_methods/datetime_methods.dart';
 
 //screen for showing all the patients
 class PatientsRecord extends StatefulWidget {
-  const PatientsRecord({super.key});
+  final String preEntry;
+  PatientsRecord({super.key, required this.preEntry});
 
   @override
   State<PatientsRecord> createState() => _PatientsRecordState();
@@ -118,18 +120,24 @@ class _PatientsRecordState extends State<PatientsRecord> {
   Future<void> saveNewPatient() async {
     trimAllControllers();
     date = currentDateToString(DateTime.now());
-    int response = await patientsProvider.addNewPatient(
-        firstName, lastName, age, phone, date);
-    if (response > 0) {
-      showBar(context, AppLocalizations.of(context)!.success,
-          InfoBarSeverity.success);
-      clearAllControllers();
-      Navigator.of(context).push(FluentPageRoute(
-          builder: (context) => PatientScreen(
-              id: response, patientName: '$firstName $lastName')));
+    bool s = await checkForS(widget.preEntry);
+    if (s) {
+      int response = await patientsProvider.addNewPatient(
+          firstName, lastName, age, phone, date);
+      if (response > 0) {
+        showBar(context, AppLocalizations.of(context)!.success,
+            InfoBarSeverity.success);
+        clearAllControllers();
+        Navigator.of(context).push(FluentPageRoute(
+            builder: (context) => PatientScreen(
+                id: response, patientName: '$firstName $lastName')));
+      } else {
+        showBar(context, AppLocalizations.of(context)!.failed,
+            InfoBarSeverity.error);
+      }
     } else {
-      showBar(
-          context, AppLocalizations.of(context)!.failed, InfoBarSeverity.error);
+      showBar(context, 'النسخة التجريبية تتيح إضافة 50 مريض على الأكثر',
+          InfoBarSeverity.warning);
     }
   }
 

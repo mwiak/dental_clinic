@@ -1,3 +1,4 @@
+import 'package:dental_clinic/model/remote_server/server.dart';
 import 'package:dental_clinic/view/main_menu_screens/patients_record.dart';
 import 'package:dental_clinic/view/main_menu_screens/payments.dart';
 import 'package:dental_clinic/view/main_menu_screens/reminders.dart';
@@ -10,9 +11,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //main screen is a wrapper widget with 4 routes: patients record, payments, reminders, and settings
 class MainScreen extends StatefulWidget {
-  const MainScreen({
-    super.key,
-  });
+  int? selectedIndex = 0;
+  String preEntry;
+  MainScreen(
+      {super.key,
+      this.selectedIndex,
+      this.preEntry = 'ZkI2314PoiuANmaPiaka742!sajksoowha'});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -26,7 +30,9 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    topIndex = widget.selectedIndex ?? 0;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
+    ServerService.setPreEntry(widget.preEntry);
   }
 
   @override
@@ -51,7 +57,9 @@ class _MainScreenState extends State<MainScreen> {
             PaneItem(
               icon: const Icon(FluentIcons.people),
               title: Text(AppLocalizations.of(context)!.patients_record),
-              body: PatientsRecord(),
+              body: PatientsRecord(
+                preEntry: widget.preEntry!,
+              ),
             ),
             PaneItem(
               icon: const Icon(FluentIcons.list),

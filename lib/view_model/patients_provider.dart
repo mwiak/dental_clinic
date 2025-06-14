@@ -1,4 +1,5 @@
 import 'package:dental_clinic/model/patients_model.dart';
+import 'package:dental_clinic/shared/public_methods/pre_entry.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class PatientsProvider extends ChangeNotifier {

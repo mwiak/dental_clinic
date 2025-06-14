@@ -5,23 +5,37 @@ class PaymentEntry extends StatelessWidget {
   final num amount;
   final String date;
   final String notes;
+  final Function onPay;
   const PaymentEntry(
       {super.key,
       required this.title,
       required this.amount,
       required this.date,
-      required this.notes});
+      required this.notes,
+      required this.onPay});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 500,
-      child: Row(
-        children: [
-          Expanded(child: Text(title)),
-          Expanded(child: Text(amount.toString())),
-          Expanded(child: Text(date)),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Container(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(width: 100, child: Text(title)),
+            SizedBox(width: 80, child: Text(amount.toString())),
+            SizedBox(width: 80, child: Text(date)),
+            SizedBox(
+              width: 80,
+              child: Button(
+                  child: Text('دفع'),
+                  onPressed: () {
+                    onPay.call();
+                  }),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -47,23 +61,22 @@ class PaymentSEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Button(
-        onPressed: onTap,
-        child: SizedBox(
-          width: 450,
-          child: Row(
-            children: [
-              Expanded(child: Text(title)),
-              Expanded(child: Text(amount.toString())),
-              SizedBox(
-                width: 50,
-              ),
-              Expanded(child: Text(date)),
-              SizedBox(
-                width: 100,
-              ),
-            ],
-          ),
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(width: 100, child: Text(title)),
+            SizedBox(width: 80, child: Text(amount.toString())),
+            SizedBox(width: 80, child: Text(date)),
+            SizedBox(
+                width: 80,
+                child: IconButton(
+                    icon: Icon(FluentIcons.edit),
+                    onPressed: () {
+                      onTap.call();
+                    })),
+          ],
         ),
       ),
     );

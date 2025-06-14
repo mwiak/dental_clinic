@@ -73,12 +73,12 @@ class _PatientDetailedItemState extends State<PatientDetailedItem> {
               children: [
                 Expanded(child: Text(widget.patientData['firstname'])),
                 Expanded(child: Text(widget.patientData['lastname'])),
-                Expanded(child: Text(widget.patientData['age'] + '  ' + 'سنة')),
+                Expanded(child: Text(widget.patientData['age'])),
                 Expanded(child: Text(widget.patientData['phone_number'])),
               ],
             ),
             onPressed: () {
-              Navigator.of(context).pushReplacement(FluentPageRoute(
+              Navigator.of(context).push(FluentPageRoute(
                   builder: (context) => PatientScreen(
                         id: widget.patientData['id'],
                         patientName: widget.patientData['firstname'] +

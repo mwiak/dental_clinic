@@ -47,7 +47,8 @@ class _PatientRemindersState extends State<PatientReminders> {
       String cause = reasonC.text.trim();
       addReminder(cause, date);
     } else {
-      showBar(context, 'cant be empty', InfoBarSeverity.warning);
+      showBar(context, AppLocalizations.of(context)!.title_required,
+          InfoBarSeverity.warning);
     }
   }
 

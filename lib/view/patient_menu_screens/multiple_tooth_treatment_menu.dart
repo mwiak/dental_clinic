@@ -11,8 +11,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../shared/custom_widgets/text_boxes.dart';
+import '../../view_model/teeth_provider.dart';
 
 class MultipleToothTreatmentMenu extends StatefulWidget {
   final int patientId;
@@ -181,6 +183,7 @@ class MultipleToothTreatmentMenuState
       if (response > 0) {
         showBar(context, AppLocalizations.of(context)!.success,
             InfoBarSeverity.success);
+        Provider.of<TeethProvider>(context, listen: false).notify();
         Navigator.of(context).pop();
         setState(() {});
       } else {

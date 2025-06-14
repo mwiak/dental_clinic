@@ -4,8 +4,13 @@ class ExpensesEntry extends StatefulWidget {
   final String title;
   final num cost;
   final String? date;
+  final Function onPressed;
   const ExpensesEntry(
-      {super.key, required this.title, required this.cost, this.date});
+      {super.key,
+      required this.title,
+      required this.cost,
+      this.date,
+      required this.onPressed});
 
   @override
   State<ExpensesEntry> createState() => _ExpensesEntryState();
@@ -22,26 +27,33 @@ class _ExpensesEntryState extends State<ExpensesEntry> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        child: Center(
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Text(widget.title),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text('\$ ${widget.cost.toString()}'),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(getDate()),
-              )
-            ],
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(widget.title),
           ),
-        ),
+          SizedBox(
+            width: 80,
+            child: Text('\$ ${widget.cost.toString()}'),
+          ),
+          SizedBox(
+            width: 80,
+            child: Text(getDate()),
+          ),
+          SizedBox(
+            width: 80,
+            child: IconButton(
+              icon: Icon(FluentIcons.edit),
+              onPressed: () {
+                widget.onPressed.call();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

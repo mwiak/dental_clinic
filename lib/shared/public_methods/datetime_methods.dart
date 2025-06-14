@@ -7,6 +7,13 @@ String currentDateToString(DateTime dateInput) {
   return dateString;
 }
 
+String currentDateStampToString(DateTime dateInput) {
+  String format = 'dd_MM_yyyy__HH_mm_ss';
+  DateFormat dateFormatter = DateFormat(format);
+  String dateString = dateFormatter.format(dateInput);
+  return dateString;
+}
+
 DateTime? stringToDate(String dateString) {
   if (dateString.isNotEmpty) {
     String format = 'dd/MM/yyyy';
