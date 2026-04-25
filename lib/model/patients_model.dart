@@ -4,10 +4,16 @@ import 'package:dental_clinic/database/sqflite.dart';
 class PatientsModel {
   SqlDb dataHelper = SqlDb();
 
-  Future<int> addNewPatient(String firstName, String lastName, String age,
-      String phone, String date) async {
+  Future<int> addNewPatient(
+      String firstName,
+      String lastName,
+      String normalizedName,
+      String age,
+      String phone,
+      String address,
+      String date) async {
     int response = await dataHelper.insertData(
-        '''INSERT INTO patients (firstname,lastname,age,phone_number,date) VALUES ('$firstName','$lastName','$age','$phone', '$date')  ''');
+        '''INSERT INTO patients (firstname,lastname,normalized_name,age,phone_number,address,date) VALUES ('$firstName','$lastName','$normalizedName','$age','$phone', '$address','$date')  ''');
     return response;
   }
 

@@ -262,7 +262,7 @@ class _GeneralReminderEntryState extends State<GeneralReminderEntry> {
           children: [
             Expanded(child: Text(widget.data.patientName)),
             Expanded(child: Text(widget.data.title)),
-            Expanded(child: Text(currentDateToString(widget.data.date))),
+            Expanded(child: Text(dateToString(widget.data.date))),
             Expanded(child: Text(generateLeftDays())),
             Expanded(
                 child: DropDownButton(

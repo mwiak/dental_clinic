@@ -1,9 +1,10 @@
+import 'package:dental_clinic/shared/strings/patient_screen.dart';
 import 'package:dental_clinic/view/main_screen.dart';
-import 'package:dental_clinic/view/patient_menu_screens/implants.dart';
-import 'package:dental_clinic/view/patient_menu_screens/patient_payments.dart';
+import 'package:dental_clinic/view/patient_menu_screens/medical_record.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patient_reminders.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patients_info.dart';
-import 'package:dental_clinic/view/patient_menu_screens/treatments.dart';
+import 'package:dental_clinic/view/patient_menu_screens/pregnancy.dart';
+import 'package:dental_clinic/view/patient_menu_screens/sessions.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -70,22 +71,27 @@ class _PatientScreenState extends State<PatientScreen> {
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.treatments),
-              body: Treatments(patientId: widget.id),
+              title: Text(LABELS['pregnancies']!),
+              body: Pregnancy(patientId: widget.id),
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.implants),
-              body: Implants(patientId: widget.id),
+              title: Text(LABELS['sessions']!),
+              body: Sessions(patientId: widget.id),
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.payments),
-              body: PatientPayments(patientId: widget.id),
+              title: Text(LABELS['medical_record']!),
+              body: MedicalRecord(patientId: widget.id),
             ),
             PaneItem(
               icon: const SizedBox.shrink(),
-              title: Text(AppLocalizations.of(context)!.reminders),
+              title: Text(LABELS['drugs']!),
+              body: MedicalRecord(patientId: widget.id),
+            ),
+            PaneItem(
+              icon: const SizedBox.shrink(),
+              title: Text(LABELS['reminders']!),
               body: PatientReminders(
                 patientId: widget.id,
                 patientName: 'sadsadasd',

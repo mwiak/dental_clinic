@@ -1,6 +1,5 @@
 import 'package:dental_clinic/model/remote_server/server.dart';
 import 'package:dental_clinic/view/main_menu_screens/patients_record.dart';
-import 'package:dental_clinic/view/main_menu_screens/payments.dart';
 import 'package:dental_clinic/view/main_menu_screens/reminders.dart';
 import 'package:dental_clinic/view/main_menu_screens/remote_users_page.dart';
 import 'package:dental_clinic/view/main_menu_screens/settings.dart';
@@ -67,11 +66,6 @@ class _MainScreenState extends State<MainScreen> {
               body: WaitingListPage(),
             ),
             PaneItemSeparator(thickness: 1),
-            PaneItem(
-              icon: const Icon(FluentIcons.circle_dollar),
-              title: Text(AppLocalizations.of(context)!.payments),
-              body: Payments(),
-            ),
             PaneItem(
               icon: const Icon(FluentIcons.ringer),
               title: Text(AppLocalizations.of(context)!.notifications),

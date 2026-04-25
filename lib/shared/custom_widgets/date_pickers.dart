@@ -1,3 +1,4 @@
+import 'package:dental_clinic/shared/public_methods/datetime_methods.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 
@@ -119,6 +120,48 @@ class _DatePickerNullableState extends State<DatePickerNullable> {
                 })
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BirthDatePicker extends StatefulWidget {
+  final String label;
+  final TextEditingController value;
+  final String? requiredSymbol;
+  const BirthDatePicker(
+      {super.key,
+      required this.label,
+      required this.value,
+      this.requiredSymbol});
+
+  @override
+  State<BirthDatePicker> createState() => _BirthDatePickerState();
+}
+
+class _BirthDatePickerState extends State<BirthDatePicker> {
+  DateTime selectedDate = DateTime(2000, 1, 1);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.value.text = dateToString(
+      DateTime(2000, 1, 1),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InfoLabel(
+      label: widget.label + (widget.requiredSymbol ?? ''),
+      child: DatePicker(
+        selected: selectedDate,
+        onChanged: (value) {
+          setState(() {
+            selectedDate = value;
+            widget.value.text = dateToString(value);
+          });
+        },
       ),
     );
   }

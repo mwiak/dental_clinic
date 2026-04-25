@@ -1,5 +1,6 @@
 import 'package:dental_clinic/shared/custom_widgets/barboxes.dart';
 import 'package:dental_clinic/shared/custom_widgets/flyout.dart';
+import 'package:dental_clinic/shared/custom_widgets/small_text_box.dart';
 import 'package:dental_clinic/shared/custom_widgets/text_boxes.dart';
 import 'package:dental_clinic/view/main_screen.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -34,6 +35,14 @@ class _PatientsInfoState extends State<PatientsInfo>
   TextEditingController medicalC = TextEditingController();
   TextEditingController surgeryC = TextEditingController();
   TextEditingController notesC = TextEditingController();
+
+  //numbers
+  TextEditingController nOfAliveKidsC = TextEditingController();
+  TextEditingController nOfPregnanciesC = TextEditingController();
+  TextEditingController nOfMiscarriageC = TextEditingController();
+  TextEditingController nOfNaturalBirthsC = TextEditingController();
+  TextEditingController nOfArtificialBirthsC = TextEditingController();
+  TextEditingController dateOfLastPeriodC = TextEditingController();
 
   String firstname = '';
   String lastname = '';
@@ -120,137 +129,184 @@ class _PatientsInfoState extends State<PatientsInfo>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
+    return Column(
+      children: [
+        ConstrainedBox(
+          constraints:
+              BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+          child: IntrinsicHeight(
+            child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
+                child: Row(
                   children: [
-                    InfoEntrySmall(
-                      controller: firstnameC,
-                      label: AppLocalizations.of(context)!.first_name,
-                      readOnly: enabled,
-                    ),
-                    InfoEntrySmall(
-                      controller: lastnameC,
-                      label: AppLocalizations.of(context)!.last_name,
-                      readOnly: enabled,
-                    ),
-                    InfoEntrySmall(
-                      controller: ageC,
-                      label: AppLocalizations.of(context)!.age,
-                      readOnly: enabled,
-                    ),
-                    InfoEntrySmall(
-                      controller: phoneC,
-                      label: AppLocalizations.of(context)!.phone,
-                      readOnly: enabled,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    InfoLabel(
-                      label: AppLocalizations.of(context)!.registration_date,
-                      child: Row(
-                        children: [
-                          Text(date),
-                        ],
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            InfoEntrySmall(
+                              controller: firstnameC,
+                              label: AppLocalizations.of(context)!.first_name,
+                              readOnly: enabled,
+                            ),
+                            InfoEntrySmall(
+                              controller: lastnameC,
+                              label: AppLocalizations.of(context)!.last_name,
+                              readOnly: enabled,
+                            ),
+                            InfoEntrySmall(
+                              controller: ageC,
+                              label: AppLocalizations.of(context)!.age,
+                              readOnly: enabled,
+                            ),
+                            InfoEntrySmall(
+                              controller: phoneC,
+                              label: AppLocalizations.of(context)!.phone,
+                              readOnly: enabled,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            InfoLabel(
+                              label: AppLocalizations.of(context)!
+                                  .registration_date,
+                              child: Row(
+                                children: [
+                                  Text(date),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Row(
+                              children: [
+                                SizedBox(
+                                    width: 100,
+                                    child: Button(
+                                        child: Text(enabled
+                                            ? AppLocalizations.of(context)!
+                                                .discard
+                                            : AppLocalizations.of(context)!
+                                                .edit),
+                                        onPressed: () {
+                                          if (enabled) {
+                                            getPatientInfo();
+                                            setState(() {
+                                              enabled = !enabled;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              enabled = !enabled;
+                                            });
+                                          }
+                                        })),
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                enabled
+                                    ? FilledButton(
+                                        child: Text(
+                                            AppLocalizations.of(context)!.save),
+                                        onPressed: () {
+                                          validateModification();
+                                        })
+                                    : SizedBox.shrink(),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Spacer(),
-                    Row(
-                      children: [
-                        SizedBox(
-                            width: 100,
-                            child: Button(
-                                child: Text(enabled
-                                    ? AppLocalizations.of(context)!.discard
-                                    : AppLocalizations.of(context)!.edit),
-                                onPressed: () {
-                                  if (enabled) {
-                                    getPatientInfo();
-                                    setState(() {
-                                      enabled = !enabled;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      enabled = !enabled;
-                                    });
-                                  }
-                                })),
-                        SizedBox(
-                          width: 7,
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            SmallTextBox(
+                              controller: nOfAliveKidsC,
+                              label: 'عدد الأولاد الأحياء',
+                              readOnly: enabled,
+                            ),
+                            SmallTextBox(
+                                controller: nOfArtificialBirthsC,
+                                label: 'مرات الولادة القيصرية',
+                                readOnly: enabled),
+                            SmallTextBox(
+                                controller: nOfNaturalBirthsC,
+                                label: 'مرات الولادة الطبيعية',
+                                readOnly: enabled)
+                          ],
                         ),
-                        enabled
-                            ? FilledButton(
-                                child: Text(AppLocalizations.of(context)!.save),
-                                onPressed: () {
-                                  validateModification();
-                                })
-                            : SizedBox.shrink(),
-                      ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            SmallTextBox(
+                                controller: nOfPregnanciesC,
+                                label: 'عدد مرات الحمل',
+                                readOnly: enabled),
+                            SmallTextBox(
+                                controller: nOfMiscarriageC,
+                                label: 'عدد الإسقاطات',
+                                readOnly: enabled),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            InfoEntryLarge(
+                              controller: medicalC,
+                              label:
+                                  AppLocalizations.of(context)!.medical_history,
+                              readOnly: enabled,
+                            ),
+                            InfoEntryLarge(
+                              controller: surgeryC,
+                              label:
+                                  AppLocalizations.of(context)!.surgery_history,
+                              readOnly: enabled,
+                            ),
+                            InfoEntryLarge(
+                              controller: notesC,
+                              label: AppLocalizations.of(context)!.notes,
+                              readOnly: enabled,
+                            ),
+                            Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                BasicFlyout(
+                                    warning: AppLocalizations.of(context)!
+                                        .delete_warning,
+                                    onProceed: deletePatient,
+                                    action: AppLocalizations.of(context)!
+                                        .delete_confirm,
+                                    buttonText: AppLocalizations.of(context)!
+                                        .delete_patient)
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     )
                   ],
                 ),
               ),
             ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    InfoEntryLarge(
-                      controller: medicalC,
-                      label: AppLocalizations.of(context)!.medical_history,
-                      readOnly: enabled,
-                    ),
-                    InfoEntryLarge(
-                      controller: surgeryC,
-                      label: AppLocalizations.of(context)!.surgery_history,
-                      readOnly: enabled,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    InfoEntryLarge(
-                      controller: notesC,
-                      label: AppLocalizations.of(context)!.notes,
-                      readOnly: enabled,
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        BasicFlyout(
-                            warning:
-                                AppLocalizations.of(context)!.delete_warning,
-                            onProceed: deletePatient,
-                            action:
-                                AppLocalizations.of(context)!.delete_confirm,
-                            buttonText:
-                                AppLocalizations.of(context)!.delete_patient)
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+          ),
+        )
+      ],
     );
   }
 }

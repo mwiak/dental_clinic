@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dental_clinic/database/sqflite.dart';
+import 'package:dental_clinic/shared/theme.dart';
 import 'package:dental_clinic/view_model/backup_provider.dart';
 import 'package:dental_clinic/model/remote_server/server.dart';
 import 'package:dental_clinic/service_locater/get_it.dart';
@@ -11,8 +12,10 @@ import 'package:dental_clinic/view_model/custome_field_provider.dart';
 import 'package:dental_clinic/view_model/exchange_rate_provider.dart';
 import 'package:dental_clinic/view_model/navigationService.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
+import 'package:dental_clinic/view_model/pregnancy_provider.dart';
 import 'package:dental_clinic/view_model/reminders_provider.dart';
 import 'package:dental_clinic/view_model/remote_users_provider.dart';
+import 'package:dental_clinic/view_model/shortcuts_provider.dart';
 import 'package:dental_clinic/view_model/teeth_implant_provider.dart';
 import 'package:dental_clinic/view_model/teeth_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -43,6 +46,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => TeethProvider()),
     ChangeNotifierProvider(create: (_) => TeethImplantProvider()),
     ChangeNotifierProvider(create: (_) => BackupProvider()),
+    ChangeNotifierProvider(create: (_) => PregnancyProvider()),
+    ChangeNotifierProvider(create: (_) => ShortcutsProvider()),
   ], child: const MyApp()));
 }
 
@@ -59,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return FluentApp(
       navigatorKey: NavigationService.navigatorKey,
-      theme: Provider.of<UserProvider>(context).themeMode, // Light theme
+      theme: lightMode, //Provider.of<UserProvider>(context).themeMode,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

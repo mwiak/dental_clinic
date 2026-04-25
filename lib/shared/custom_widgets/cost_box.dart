@@ -1,4 +1,3 @@
-import 'package:dental_clinic/shared/custom_widgets/exchange_rate_panel.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -98,7 +97,6 @@ class _PriceFieldEState extends State<PriceFieldE> {
                     SizedBox(
                       height: 20,
                     ),
-                    ExchangeRatePanel(),
                   ],
                 ),
               ),
@@ -133,7 +131,6 @@ class _PriceFieldEState extends State<PriceFieldE> {
                     SizedBox(
                       height: 20,
                     ),
-                    ExchangeRateSyrianPanel(),
                   ],
                 ),
               ),

@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-String currentDateToString(DateTime dateInput) {
+String dateToString(DateTime dateInput) {
   String format = 'dd/MM/yyyy';
   DateFormat dateFormatter = DateFormat(format);
   String dateString = dateFormatter.format(dateInput);

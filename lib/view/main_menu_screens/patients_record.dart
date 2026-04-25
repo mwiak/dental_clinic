@@ -1,6 +1,8 @@
 import 'package:dental_clinic/database/sqflite.dart';
+import 'package:dental_clinic/shared/custom_widgets/date_pickers.dart';
 import 'package:dental_clinic/shared/custom_widgets/patient_item.dart';
 import 'package:dental_clinic/shared/custom_widgets/text_boxes.dart';
+import 'package:dental_clinic/shared/public_methods/arabic_operations.dart';
 import 'package:dental_clinic/shared/public_methods/pre_entry.dart';
 import 'package:dental_clinic/view/patient_menu_screens/patient_screen.dart';
 import 'package:dental_clinic/view_model/patients_provider.dart';
@@ -35,6 +37,7 @@ class _PatientsRecordState extends State<PatientsRecord> {
   TextEditingController lastNameC = TextEditingController();
   TextEditingController ageC = TextEditingController();
   TextEditingController phoneC = TextEditingController();
+  TextEditingController addressC = TextEditingController();
 
   String firstName = '';
   String lastName = '';
@@ -122,8 +125,10 @@ class _PatientsRecordState extends State<PatientsRecord> {
     date = currentDateToString(DateTime.now());
     bool s = await checkForS(widget.preEntry);
     if (s) {
-      int response = await patientsProvider.addNewPatient(
-          firstName, lastName, age, phone, date);
+      String normalizedName =
+          normalizeArabic(firstName) + normalizeArabic(lastName); //TODO
+      int response = await patientsProvider.addNewPatient(firstName, lastName,
+          normalizedName, age, phone, addressC.text.trim(), date);
       if (response > 0) {
         showBar(context, AppLocalizations.of(context)!.success,
             InfoBarSeverity.success);
@@ -244,9 +249,9 @@ class _PatientsRecordState extends State<PatientsRecord> {
             SizedBox(
               height: 5,
             ),
-            InputText(
-              controller: ageC,
-              label: AppLocalizations.of(context)!.age,
+            BirthDatePicker(
+              value: ageC,
+              label: 'تاريخ الميلاد',
               requiredSymbol: '*',
             ),
             SizedBox(
@@ -256,6 +261,11 @@ class _PatientsRecordState extends State<PatientsRecord> {
               controller: phoneC,
               label: AppLocalizations.of(context)!.phone,
               requiredSymbol: '*',
+            ),
+            InputText(
+              controller: addressC,
+              label: 'العنوان',
+              requiredSymbol: '',
             )
           ],
         ),
@@ -263,7 +273,7 @@ class _PatientsRecordState extends State<PatientsRecord> {
           Button(
             child: Text(AppLocalizations.of(context)!.cancel),
             onPressed: () {
-              Navigator.pop(context, 'User deleted file');
+              Navigator.pop(context);
               // Delete file here
             },
           ),
@@ -277,6 +287,11 @@ class _PatientsRecordState extends State<PatientsRecord> {
       ),
     );
     setState(() {});
+    firstNameC.clear();
+    lastNameC.clear();
+    ageC.clear();
+    phoneC.clear();
+    addressC.clear();
   }
 
   Future<void> cleanDB() async {

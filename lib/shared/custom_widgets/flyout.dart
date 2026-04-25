@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 class BasicFlyout extends StatelessWidget {
   final String warning;
-  final VoidCallback onProceed;
+  final Function onProceed;
   final String buttonText;
   final String action;
   BasicFlyout(

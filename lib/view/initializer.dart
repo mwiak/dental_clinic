@@ -90,10 +90,6 @@ class _InitializerState extends State<Initializer> {
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/Denta.png'),
-          SizedBox(
-            height: 30,
-          ),
           ProgressBar(),
         ],
       ),

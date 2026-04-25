@@ -26,16 +26,6 @@ class SqlDb {
 
   _onUpgrade(Database db, int oldversion, int newversion) async {
     print("onUpgrade =====================================");
-
-    await db.execute('''
-  CREATE TABLE IF NOT EXISTS remote_user  (
-    id INTEGER PRIMARY KEY  , 
-    name TEXT ,
-    device TEXT,
-    token TEXT
-    
-     )
-     ''');
   }
 
   deleteDP() async {
@@ -70,20 +60,14 @@ class SqlDb {
    ''');
 
     await db.execute('''
-  CREATE TABLE prices (
-    id INTEGER PRIMARY KEY  , 
-    exchange REAL, 
-    syrian_pound_exchange REAL
-     )
-   ''');
-
-    await db.execute('''
   CREATE TABLE patients (
     id INTEGER PRIMARY KEY  , 
     firstname TEXT ,
     lastname TEXT,
+    normalized_name TEXT,
     age TEXT,
     phone_number TEXT,
+    address TEXT,
     medical TEXT,
     surgery TEXT,
     notes TEXT,
@@ -93,55 +77,48 @@ class SqlDb {
    ''');
 
     await db.execute('''
-  CREATE TABLE treatments (
+  CREATE TABLE patient_info (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    tooth_code TEXT,
-    treatment TEXT,
+    n_alive_kids INTEGER,
+    n_failed_pr INTEGER,
+    n_normal_births INTEGER,
+    n_artificial_births INTEGER,
+    last_period_date TEXT,
+    FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
+     )
+   ''');
+
+    await db.execute('''
+  CREATE TABLE sessions (
+    id INTEGER PRIMARY KEY, 
+    patient_id INTEGER,
+    date TEXT,
     details TEXT,
-    date TEXT,
-    cost REAL,
-    notes TEXT
-    
+    pregnancy_id INTEGER,
+    FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
      )
    ''');
 
     await db.execute('''
-  CREATE TABLE general_treatments (
+  CREATE TABLE pregnancies (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    treatment_type TEXT,
-    date TEXT,
-    cost REAL,
-    notes TEXT
-    
+    start_date TEXT,
+    expected_birth_date TEXT,
+    status TEXT DEFAULT 'ongoing',
+    complete_date TEXT,
+    summary TEXT,
+    FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
      )
    ''');
 
     await db.execute('''
-  CREATE TABLE implants (
+  CREATE TABLE drugs_invoice (
     id INTEGER PRIMARY KEY, 
     patient_id INTEGER,
-    tooth_code TEXT,
-    type TEXT,
-    details TEXT,
-    dates TEXT,
-    date TEXT,
-    cost REAL,
-    notes TEXT
-    
-     )
-   ''');
-
-    await db.execute('''
-  CREATE TABLE payments (
-    id INTEGER PRIMARY KEY, 
-    patient_id INTEGER,
-    title TEXT,
-    amount REAL,
-    date TEXT,
-    notes TEXT
-      
+    drugs TEXT,
+    FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
      )
    ''');
 
@@ -156,14 +133,6 @@ class SqlDb {
     FOREIGN KEY (patient_id) REFERENCES patients (id) ON DELETE CASCADE   
      )
    ''');
-    await db.execute('''
-  CREATE TABLE expenses (
-    id INTEGER PRIMARY KEY, 
-    description TEXT,
-    date TEXT,
-    amount REAL   
-     )
-   ''');
 
     await db.execute('''
   CREATE TABLE backup (
@@ -176,19 +145,19 @@ class SqlDb {
    ''');
 
     await db.execute('''
-  CREATE TABLE general_treatments_types (
+  CREATE TABLE pregnancy_end_status (
     id INTEGER PRIMARY KEY, 
-    type TEXT
-    
+    value TEXT
      )
    ''');
 
     await db.execute('''
-      CREATE TABLE treatment_types (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
-      )
-    ''');
+  CREATE TABLE shortcuts (
+    id INTEGER PRIMARY KEY,
+    category TEXT, 
+    value TEXT
+     )
+   ''');
 
     await db.execute('''
       CREATE TABLE custom_fields (
@@ -236,11 +205,6 @@ class SqlDb {
         FOREIGN KEY (custom_field_id) REFERENCES custom_fields_implants (id) ON DELETE CASCADE
       )
     ''');
-
-    await db.insert(
-      'prices',
-      {'exchange': '34.10', 'syrian_pound_exchange': '10900.00'},
-    );
 
     print(" onCreate =====================================");
   }

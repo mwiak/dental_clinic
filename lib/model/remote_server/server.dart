@@ -195,7 +195,7 @@ class ServerService {
           String lastName = data['lastname'];
           String age = data['age'];
           String phone = data['phone'];
-          String date = currentDateToString(DateTime.now());
+          String date = dateToString(DateTime.now());
           bool flag = await checkForS(preEntry);
           if (flag) {
             int response =
